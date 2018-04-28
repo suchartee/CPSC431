@@ -68,7 +68,15 @@
          (?=S*[W]): non-word characters = special characters
          $: the end of the string
          */
-        echo '<script type="text/javascript"> alert("The password must be in the correct format") </script>';
+
+        $password_warning = 'The password must be in the correct format:'
+          .'\n- At least 6 characters long'
+          .'\n- Contain at least one lowercase and uppercase letter '
+          .'\n- Have at least one number  '
+          .'\n- Contain no special characters (such as @))';
+        echo '<script type="text/javascript">';
+        echo 'alert("'.$password_warning.'")';
+        echo  '</script>';
       } else {
         // validate email format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
