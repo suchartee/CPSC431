@@ -73,6 +73,9 @@
         $stmt->bind_param("iss", $attempt, $nextAttempt ,$username);
         $stmt->execute();
 
+        // Close the db connection using manager credentials
+        $db->close();
+
         echo "<script>window.location = 'dashboard.php';</script>";
     }
     /* Alice's part */
