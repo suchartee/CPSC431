@@ -14,6 +14,8 @@
 
 <body>
   <?php
+    include 'logged_navbar.php';
+
     // check role
     switch($_SESSION["role"]) {
       case "operator" :
