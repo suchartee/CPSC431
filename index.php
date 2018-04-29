@@ -60,6 +60,11 @@
         $stmt->bind_param("s", $username);
         $stmt->execute();
 
+        // Previous db connection using accountauth does not Have
+        // permission to access LoginAttempts table. Therefore,
+        // we open a new db connection with manager credentials
+        $db = configDB(3);
+
         // Reset record from the LoginAttempts table
         $nextAttempt = null;
         $attempt = 0;
