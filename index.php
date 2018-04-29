@@ -38,7 +38,7 @@
     // DONT FORGET TO HASH PASSWORD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     $db = configDB(5);
 
-    $query = "SELECT Username, Email, RoleName FROM Account WHERE Username = ? && Password = ?";
+    $query = "SELECT Username, Email, RoleID FROM Account WHERE Username = ? AND Password = ?";
     $stmt = $db->prepare($query);
     $stmt->bind_param("ss", $username, $password);
     $stmt->execute();
