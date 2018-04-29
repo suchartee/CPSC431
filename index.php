@@ -1,6 +1,11 @@
 <?php
   session_start();
-  require_once "config.php"
+  require_once "config.php";
+
+  if (isset($_SESSION["authenticated"])) {
+      header("Location: dashboard.php");
+      exit;
+  }
 ?>
 
 <!DOCTYPE html>
@@ -11,11 +16,7 @@
 </head>
 
 <body>
-  <!-- Navigation menu on top -->
-  <ul class="drop_menu">
-    <li><a href='index.php'>Home</a></li>
-    <li><a href='about.php'>About</a></li>
-  </ul>
+<?php include_once "default_navbar.php" ?>
 
   <form method="post" action="index.php">
     <div class="box">
@@ -52,6 +53,7 @@
           $_SESSION["username"] = $username;
           $_SESSION["email"] = $email;
           $_SESSION["role"] = $role;
+          $_SESSION["authenticated"] = yes;
         }
 
         // update last login time
