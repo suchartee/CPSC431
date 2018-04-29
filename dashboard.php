@@ -4,7 +4,63 @@
     echo "<script type=\"text/javascript\"> alert(\"You must log in to the system first\")</script>";
     echo "<script>window.location = 'index.php';</script>"; // redirect to index.php (login page)
   }
+
+  require_once "config.php";
+
+  function get_buttons($button_table) {
+    $db = configDB($_SESSION["role"]);
+
+    // Get buttons for observer permissions
+    $button_name = "";
+    $button_link = "";
+
+    // Even or odd counter to determine <div class>
+    // as smallboxleft or smallboxright
+    $counter = 0;
+
+    $query = "SELECT Name, Link FROM ".$button_table;
+
+    // Checks if the user has permissions to access
+    // button privileges for a table. If not, database returns a false
+    // answer and the conditional is skipped
+    if ($stmt = $db->prepare($query)){
+      $stmt->execute();
+      $stmt->store_result();
+      $stmt->bind_result($button_name, $button_link);
+
+      while($stmt->fetch()) {
+        echo "<a href=\"".$button_link."\">";
+        echo  "<div class=\"";
+
+        if ($counter % 2 != 0) {
+          echo "smallboxright";
+        } else {
+          echo "smallboxleft";
+        }
+
+        echo    "\">";
+        echo    "<h3>".$button_name."</h3>";
+        echo    "<hr/>";
+        // Button descriptions
+        //echo    "<h6>";
+        //echo      "All the player related is here.";
+        //echo    "</h6>";
+        echo  "</div>";
+        echo "</a>";
+
+        ++$counter;
+      }
+    }
+  }
+
+  function get_all_buttons() {
+      get_buttons("buttons_observer");
+      get_buttons("buttons_operator");
+      get_buttons("buttons_manager");
+      get_buttons("buttons_admin");
+  }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,203 +71,19 @@
 <body>
   <?php
     include 'logged_navbar.php';
-
-    // check role
-    switch($_SESSION["role"]) {
-      case "operator" :
-      echo "<div class=\"navmenu\">
-        <a class=\"active\" href=\"Dashboard.php\">Home</a>
-        <div style=\"float:left\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='player.php'\">Player &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"#.php\">View Player</a>
-            <a href=\"#.php\">Add Player</a>
-            <a href=\"#.php\">Edit Player</a>
-          </div>
-        </div>
-        <div style=\"float:left\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='statistics.php'\">Statistics &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"#.php\">View Statistics</a>
-            <a href=\"#.php\">Add Statistics</a>
-            <a href=\"#.php\">Edit Statistics</a>
-          </div>
-        </div>
-
-        <a style=\"float:right\" href=\"logout.php\">Logout</a>
-        <div style=\"float:right\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='profile.php'\">Profile &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"profile.php\">View Profile</a>
-            <a href=\"changePassword.php\">Change Password</a>
-          </div>
-        </div>
-        <a style=\"float:right\" href=\"about.php\">About</a>
-      </div>";
-
-      break;
-      case "manager" :
-      echo "<div class=\"navmenu\">
-        <a class=\"active\" href=\"dashboard.php\">Home</a>
-        <div style=\"float:left\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='player.php'\">Player &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"#.php\">View Player</a>
-            <a href=\"#.php\">Add Player</a>
-            <a href=\"#.php\">Edit Player</a>
-            <a href=\"#.php\">Delete Statistics</a>
-          </div>
-        </div>
-        <div style=\"float:left\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='statistics.php'\">Statistics &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"#.php\">View Statistics</a>
-            <a href=\"#.php\">Add Statistics</a>
-            <a href=\"#.php\">Edit Statistics</a>
-            <a href=\"#.php\">Delete Statistics</a>
-          </div>
-        </div>
-        <div style=\"float:left\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='privilege.php'\">Privilege &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"#.php\">View Privilege</a>
-            <a href=\"#.php\">Change Role\'s Privilege</a>
-          </div>
-        </div>
-
-
-        <a style=\"float:right\" href=\"logout.php\">Logout</a>
-        <div style=\"float:right\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='profile.php'\">Profile &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"profile.php\">View Profile</a>
-            <a href=\"changePassword.php\">Change Password</a>
-          </div>
-        </div>
-        <a style=\"float:right\" href=\"about.php\">About</a>
-      </div>";
-
-      break;
-      case "admin" :
-      echo "<div class=\"navmenu\">
-        <a class=\"active\" href=\"Dashboard.php\">Home</a>
-        <div style=\"float:left\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='player.php'\">Player &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"#.php\">View Player</a>
-            <a href=\"#.php\">Add Player</a>
-            <a href=\"#.php\">Edit Player</a>
-            <a href=\"#.php\">Delete Statistics</a>
-          </div>
-        </div>
-        <div style=\"float:left\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='statistics.php'\">Statistics &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"#.php\">View Statistics</a>
-            <a href=\"#.php\">Add Statistics</a>
-            <a href=\"#.php\">Edit Statistics</a>
-            <a href=\"#.php\">Delete Statistics</a>
-          </div>
-        </div>
-        <div style=\"float:left\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='privilege.php'\">Privilege &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"#.php\">View Privilege</a>
-            <a href=\"#.php\">Change Role\'s Privilege</a>
-            <a href=\"#.php\">Delete Role\'s Privilege</a>
-          </div>
-        </div>
-
-
-        <a style=\"float:right\" href=\"logout.php\">Logout</a>
-        <div style=\"float:right\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='profile.php'\">Profile &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"profile.php\">View Profile</a>
-            <a href=\"changePassword.php\">Change Password</a>
-          </div>
-        </div>
-        <a style=\"float:right\" href=\"about.php\">About</a>
-      </div>";
-
-
-
-
-      break;
-      default :
-      echo "<div class=\"navmenu\">
-        <a class=\"active\" href=\"Dashboard.php\">Home</a>
-        <a href=\"player.php\">Player</a>
-        <a href=\"statistics.php\">Statistics</a>
-
-
-        <a style=\"float:right\" href=\"logout.php\">Logout</a>
-        <div style=\"float:right\" class=\"dropdown\">
-          <button class=\"dropbtn\" onclick=\"window.location='profile.php'\">Profile &dArr;</button>
-          <div class=\"dropdown-content\">
-            <a href=\"profile.php\">View Profile</a>
-            <a href=\"changePassword.php\">Change Password</a>
-          </div>
-        </div>
-        <a style=\"float:right\" href=\"about.php\">About</a>
-      </div>";
-
-    }
   ?>
+
 <div class="header">
   Welcome, <?php echo $_SESSION["username"]?>!
 </div>
-<a href="player.php"><div class="container">
-  <div class="smallboxleft">
-    <h3>Player</h3>
-    <hr/>
-    <h6>
-      All the player related is here.
-    </h6>
-  </div>
-</a>
-<a href="statistics.php">
-  <div class="smallboxright">
-    <h3>Statistics</h3>
-    <hr/>
-    <h6>
-      All the statistics related is here.
-    </h6>
-  </div>
-</a>
 
-<a href="profile.php">
-  <div class="smallboxleft">
-    <h3>Profile</h3>
-    <hr/>
-    <h6>
-      Change your password here.
-    </h6>
-  </div>
-  <?php
-  if ($_SESSION["role"] == "operator" || $_SESSION["role"] == "observer") {
-    echo "<a href=\"about.php\">
-    <div class=\"smallboxright\">
-      <h3>About</h3>
-      <hr/>
-      <h6>
-        Learn more about this website here.
-      </h6>
-    </div>";
-  } else {
-    echo "<a href=\"privilege.php\">
-    <div class=\"smallboxright\">
-      <h3>Privilege</h3>
-      <hr/>
-      <h6>
-        View and change privilege of other roles here.
-      </h6>
-    </div>";
-  }
-  ?>
-  </a>
-</a>
+<?php
+  echo "<div class=\"container\">";
 
-</div>
+  get_all_buttons();
+
+  echo "</div>";
+?>
+
 </body>
 </html>
