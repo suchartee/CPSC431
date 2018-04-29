@@ -43,7 +43,7 @@
     // When the register button is clicked
     if(isset($_POST['register'])){
       // SQL injection
-      $username = strtolower(strip_tags(htmlspecialchars($_POST['username'])));
+      $username = trim(strtolower(strip_tags(htmlspecialchars($_POST['username']))));
       $password1 = strip_tags(htmlspecialchars($_POST['password1']));
       $password2 = strip_tags(htmlspecialchars($_POST['password2']));
       $email = strtolower(strip_tags(htmlspecialchars(strtolower($_POST['email']))));
