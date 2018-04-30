@@ -23,6 +23,58 @@ function randPassword(){
   return $password;
 }
 
+function get_buttons($button_table) {
+  $db = configDB($_SESSION["role"]);
+
+  // Get buttons for observer permissions
+  $button_name = "";
+  $button_link = "";
+
+  // Even or odd counter to determine <div class>
+  // as smallboxleft or smallboxright
+  $counter = 0;
+
+  $query = "SELECT Name, Link FROM ".$button_table;
+
+  // Checks if the user has permissions to access
+  // button privileges for a table. If not, database returns a false
+  // answer and the conditional is skipped
+  if ($stmt = $db->prepare($query)){
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($button_name, $button_link);
+
+    while($stmt->fetch()) {
+      echo "<a href=\"".$button_link."\">";
+      echo  "<div class=\"";
+
+      if ($counter % 2 != 0) {
+        echo "smallboxright";
+      } else {
+        echo "smallboxleft";
+      }
+
+      echo    "\">";
+      echo    "<h3>".$button_name."</h3>";
+      echo    "<hr/>";
+      // Button descriptions
+      //echo    "<h6>";
+      //echo      "All the player related is here.";
+      //echo    "</h6>";
+      echo  "</div>";
+      echo "</a>";
+
+      ++$counter;
+    }
+  }
+}
+
+function get_all_buttons() {
+    get_buttons("buttons_observer");
+    get_buttons("buttons_operator");
+    get_buttons("buttons_manager");
+    get_buttons("buttons_admin");
+}
 
 
 
