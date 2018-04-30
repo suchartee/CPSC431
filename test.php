@@ -10,6 +10,19 @@ $db = configDB(5);
  <head>
    <title>Basketball Roster Project</title>
    <link rel="stylesheet" href="style.css">
+   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+   <script type="text/javascript">
+       $(function () {
+           $("#search").change(function () {
+               if ($(this).val() == "searchByFirstName" || $(this).val() == "searchByLastName" || $(this).val() == "searchByTeam") {
+                   $("#criteria").show();
+                   $("#searchButton").show();
+               } else {
+                   $("#criteria").hide();
+               }
+           });
+       });
+   </script>
  </head>
 
  <body>
@@ -34,8 +47,23 @@ $db = configDB(5);
     }
      ?>
    </ul>
+
+
+   <div class="header">
+     <select name="search" id="search" onchange="showfield(this.options[this.selectedIndex].value)">
+       <option value="viewAllPlayer">View All Player</option>
+       <option value="searchByFirstName">Search By First Name</option>
+       <option value="searchByLastName">Search By Last Name</option>
+       <option value="searchByTeam">Search By Team Name</option>
+     </select>
+     <input type="text" id="criteria" style="display: none;" />
+     <input type="button" id="searchButton" style="display: none;" value="Search"/>
+   </div>
+
+
 </body>
 </html>
+
 
 
 <!--ref: http://www.cssterm.com/css-menus/horizontal-css-menu/simple-drop-down-menu>
