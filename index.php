@@ -462,9 +462,11 @@
           }
         }
       }
-    }*/
+    }
+  }*/
 	   /* This is the end of Suchartee Kitisopakul's part */
 	 }
+  }
  }
     ?>
 

@@ -26,8 +26,10 @@ $db = configDB(5);
  </head>
 
  <body>
+
    <ul class="drop_menu">
      <?php
+     /*
      // select all button that this role can see
      $query = "SELECT Button.ID, Button.Name, Button.Link, Permission.MenuType FROM Permission JOIN Button ON Permission.ButtonID = Button.ID AND RoleID = 2 AND Permission != 0 ORDER BY Button.ID";
      $stmt = $db->prepare($query);
@@ -44,7 +46,7 @@ $db = configDB(5);
       } else if ($menu == 2){ // is last submenu
         echo "<li><a href=\"".$link."\">". $buttonName ."</a></li></ul></li>";
       }
-    }
+    }*/
      ?>
    </ul>
 

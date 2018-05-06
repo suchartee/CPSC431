@@ -34,16 +34,16 @@
     include 'logged_navbar.php';
   ?>
 
-<div class="header">
-  <select>
-    <option value="view">View All Player</option>
-    <option value="searchByFirstName">Search By First Name</option>
-    <option value="searchByLastName">Search By Last Name</option>
-    <option value="searchByTeam">Search By Team Name</option>
-  </select>
-  <input type="text" id="criteria" style="display: none;" />
-  <input type="button" id="searchButton" style="display: none;"/>
-</div>
+  <div class="header">
+    <select name="search" id="search" onchange="showfield(this.options[this.selectedIndex].value)">
+      <option value="viewAllPlayer">View All Player</option>
+      <option value="searchByFirstName">Search By First Name</option>
+      <option value="searchByLastName">Search By Last Name</option>
+      <option value="searchByTeam">Search By Team Name</option>
+    </select>
+    <input type="text" id="criteria" style="display: none;" />
+    <input type="button" id="searchButton" style="display: none;" value="Search"/>
+  </div>
 
 </body>
 </html>
