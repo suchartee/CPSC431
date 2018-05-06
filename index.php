@@ -53,7 +53,7 @@
           $_SESSION["username"] = $username;
           $_SESSION["email"] = $email;
           $_SESSION["role"] = $role;
-          $_SESSION["authenticated"] = yes;
+          $_SESSION["authenticated"] = 'yes';
         }
 
         // update last login time
@@ -80,8 +80,392 @@
 
         echo "<script>window.location = 'dashboard.php';</script>";
     }
-    /* Alice's part */
-  }
+	   else {
+    /* This is the beginning of Suchartee Kitisopakul's part */
+    if (isset($_SESSION["timeout"]) && !empty($_SESSION["timeout"])) {
+      if ($_SESSION["timeout"] > date("Y-m-d H:i:s")) {
+        // cannot login
+        echo '<script type=\"text/javascript\"> alert(\"You still have to wait. Be patient!\")</script>';
+      } else {
+        // can log in now
+        $lastAttempt = $_SESSION["timeout"];
+        $attempt = 0;
+        unset($_SESSION["timeout"]);
+        // update the attempt to 0
+        $query = "UPDATE LoginAttempts SET Attempt = ?, LastAttempt = ? WHERE Username = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("iss", $attempt, $lastAttempt, $username);
+        $stmt->execute();
+
+        if ($username == 'admin') {
+          echo '<script type="text/javascript"> alert("You are tricky! Do not do this again.") </script>';
+        } else {
+          // check if the username is existed in the $database
+          $query = "SELECT Username, Email FROM Account WHERE Username = ?";
+          $stmt = $db->prepare($query);
+          $stmt->bind_param("s", $username);
+          $stmt->execute();
+          $stmt->store_result();
+          $stmt->bind_result($username, $email);
+
+          if($stmt->num_rows > 0) {
+            $stmt->data_seek(0);
+            while ($stmt->fetch()){
+              $_SESSION["username"] = $username;
+              $_SESSION["email"] = $email;
+            }
+            // check if that username has record in the loginAttempts or not
+            $query = "SELECT Attempt, LastAttempt, NextAttempt FROM LoginAttempts WHERE Username = ?";
+            $stmt = $db->prepare($query);
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->bind_result($attempt, $lastAttempt, $nextAttempt);
+            $stmt->data_seek(0);
+            while($stmt->fetch()){
+              // fetch the latest one
+            }
+
+            if($stmt->num_rows > 0) {
+                // there exists this username in the database
+                // check if the time is in 2 mins interval
+                $lastAttemptCheck = date("Y-m-d H:i:s");
+                $diff = strtotime($lastAttemptCheck) - strtotime($lastAttempt);
+
+                if ($diff > 120) { // if different is > 2 minutes (120 seconds)
+                  // not in 2 mins interval
+                  $attempt = 1;
+                  $disable = false;
+                } else {
+                    // within 2 mins interval
+                    if ($attempt < 3) {
+                      $attempt = $attempt + 1;
+                      $disable = false;
+                    }
+                    else {
+                      $disable = true;
+                      // update the last attempt
+                      $lastAttempt = $lastAttemptCheck;
+                      $nextAttempt = date("Y-m-d H:i:s", strtotime("+5 minutes"));
+
+                      // reformat for the user's ease of reading
+                      $nextAttemptFormat = date("D F d, Y at g:i:s A", strtotime($nextAttempt));
+
+                      $query = "UPDATE LoginAttempts SET LastAttempt = ?, NextAttempt = ? WHERE Username = ?";
+                      $stmt = $db->prepare($query);
+                      $stmt->bind_param("sss", $lastAttempt, $nextAttempt, $username);
+                      $stmt->execute();
+                    }
+                }
+                // update in database if < 4 invalid login
+                if (!$disable) {
+                  $lastAttempt = date("Y-m-d H:i:s");
+                  $query = "UPDATE LoginAttempts SET Attempt = ?, LastAttempt = ? WHERE Username = ?";
+                  $stmt = $db->prepare($query);
+                  $stmt->bind_param("iss", $attempt, $lastAttempt, $username);
+                  $stmt->execute();
+                  echo "<script type=\"text/javascript\"> alert(\"Wrong username or password! Please try again.nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
+                } else {
+                  // send email to notify user + send temporary password to user
+                  // prepare for generating new password
+
+                  $password = randPassword();
+
+                  // store new password to database;
+                  // dont forget to hash password!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                  $query = "UPDATE Account SET Password = ? WHERE Email = ?";
+                  $stmt = $db->prepare($query);
+                  $stmt->bind_param("ss", $password, $_SESSION["email"]);
+                  $stmt->execute();
+
+                  // prepare for Email
+                  $subject = "Basketball Roster: Suspicious login prevented!";
+                  $message =
+                  "Hi,
+
+                  Someone recently used wrong passwords to try to login to your account - ". $_SESSION["username"] ."
+                  Please use this password to login instead. Remember to change the password immediately after you logged in.
+
+                  ".$password."
+
+                  Sincerely,
+                  Webmaster
+                  CPSC431 Basketball Roster
+                  ";
+                  $header = "From: <webmaster@CPSC431basketballroster.com>";
+
+                  // send Email
+                  $result = mail($email, $subject, $message, $header);
+
+                  $_SESSION["timeout"] = $nextAttempt;
+
+                  echo "<script type=\"text/javascript\"> alert(\"You have exceed the number of allowed login attempts.nPlease try again later.nnYour next login time will be ". $nextAttemptFormat . "\")</script>";
+                }
+            } else { // first time the username is found, record it in the database
+              $lastAttempt = date("Y-m-d H:i:s");
+              $attempt = 1;
+              $query = "INSERT INTO LoginAttempts (Username, Attempt, LastAttempt)VALUES (?, ?, ?)";
+              $stmt = $db->prepare($query);
+              $stmt->bind_param("sis", $username, $attempt, $lastAttempt);
+              $stmt->execute();
+              echo "<script type=\"text/javascript\"> alert(\"Wrong username or password! Please try again.nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
+            }
+          } else {
+            // no username in database, but pretend that this username is in the database
+            // check if that non-existed username has record in the loginAttempts or not
+            $query = "SELECT Attempt, LastAttempt FROM LoginAttempts WHERE Username = ?";
+            $stmt = $db->prepare($query);
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->bind_result($attempt, $lastAttempt);
+            $stmt->data_seek(0);
+            while($stmt->fetch()){
+              // fetch the latest one
+            }
+            if($stmt->num_rows > 0) {
+              // there exists this non-existed username in the database
+              // check if the time is in 2 mins interval
+              $lastAttemptCheck = date("Y-m-d H:i:s");
+              $diff = strtotime($lastAttemptCheck) - strtotime($lastAttempt);
+              if ($diff > 120) { // if different is > 2 minutes (120 seconds)
+                // not in 2 mins interval
+                $attempt = 1;
+                $disable = false;
+              } else {
+                // within 2 mins interval
+                if ($attempt < 3) {
+                  $attempt = $attempt + 1;
+                  $disable = false;
+                }
+                else {
+                  $disable = true;
+                  // update the last attempt
+                  $lastAttempt = $lastAttemptCheck;
+                  $nextAttempt = date("Y-m-d H:i:s", strtotime("+5 minutes"));
+
+                  // reformat for the user's ease of reading
+                  $nextAttemptFormat = date("D F d, Y at g:i:s A", strtotime($nextAttempt));
+
+                  $query = "UPDATE LoginAttempts SET LastAttempt = ?, NextAttempt = ? WHERE Username = ?";
+                  $stmt = $db->prepare($query);
+                  $stmt->bind_param("sss", $lastAttempt, $nextAttempt, $username);
+                  $stmt->execute();
+                }
+              }
+              // update in database if < 4 invalid login
+              if (!$disable) {
+                $lastAttempt = date("Y-m-d H:i:s");
+                $query = "UPDATE LoginAttempts SET Attempt = ?, LastAttempt = ? WHERE Username = ?";
+                $stmt = $db->prepare($query);
+                $stmt->bind_param("iss", $attempt, $lastAttempt, $username);
+                $stmt->execute();
+                echo "<script type=\"text/javascript\"> alert(\"Wrong username or password! Please try again.nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
+              } else {
+                // need to set duration 5 minutes until the user can login again
+                // get the latest time?
+
+                echo '<script type="text/javascript"> alert("You have exceed the number of allowed login attempts.nPlease try again later.")</script>';
+              }
+            } else { // first time the username is found, record it in the database
+              $lastAttempt = date("Y-m-d H:i:s");
+              $attempt = 1;
+              $query = "INSERT INTO LoginAttempts VALUES (?, ?, ?)";
+              $stmt = $db->prepare($query);
+              $stmt->bind_param("sis", $username, $attempt, $lastAttempt);
+              $stmt->execute();
+              echo "<script type=\"text/javascript\"> alert(\"Wrong username or password! Please try again.nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
+            }
+          }
+        }
+      }
+    } else {
+      /* if ($username == 'admin') {
+        echo '<script type="text/javascript"> alert("You are tricky! Do not do this again.") </script>';
+      } else {
+        // check if the username is existed in the $database
+        $query = "SELECT Username, Email FROM Account WHERE Username = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($username, $email);
+
+        if($stmt->num_rows > 0) {
+          $stmt->data_seek(0);
+          while ($stmt->fetch()){
+            $_SESSION["username"] = $username;
+            $_SESSION["email"] = $email;
+          }
+          // check if that username has record in the loginAttempts or not
+          $query = "SELECT Attempt, LastAttempt, NextAttempt FROM LoginAttempts WHERE Username = ?";
+          $stmt = $db->prepare($query);
+          $stmt->bind_param("s", $username);
+          $stmt->execute();
+          $stmt->store_result();
+          $stmt->bind_result($attempt, $lastAttempt, $nextAttempt);
+          $stmt->data_seek(0);
+          while($stmt->fetch()){
+            // fetch the latest one
+          }
+
+          if($stmt->num_rows > 0) {
+              // there exists this username in the database
+              // check if the time is in 2 mins interval
+              $lastAttemptCheck = date("Y-m-d H:i:s");
+              $diff = strtotime($lastAttemptCheck) - strtotime($lastAttempt);
+
+              if ($diff > 120) { // if different is > 2 minutes (120 seconds)
+                // not in 2 mins interval
+                $attempt = 1;
+                $disable = false;
+              } else {
+                  // within 2 mins interval
+                  if ($attempt < 3) {
+                    $attempt = $attempt + 1;
+                    $disable = false;
+                  }
+                  else {
+                    $disable = true;
+                    // update the last attempt
+                    $lastAttempt = $lastAttemptCheck;
+                    $nextAttempt = date("Y-m-d H:i:s", strtotime("+5 minutes"));
+
+                    // reformat for the user's ease of reading
+                    $nextAttemptFormat = date("D F d, Y at g:i:s A", strtotime($nextAttempt));
+
+                    $query = "UPDATE LoginAttempts SET LastAttempt = ?, NextAttempt = ? WHERE Username = ?";
+                    $stmt = $db->prepare($query);
+                    $stmt->bind_param("sss", $lastAttempt, $nextAttempt, $username);
+                    $stmt->execute();
+                  }
+              }
+              // update in database if < 4 invalid login
+              if (!$disable) {
+                $lastAttempt = date("Y-m-d H:i:s");
+                $query = "UPDATE LoginAttempts SET Attempt = ?, LastAttempt = ? WHERE Username = ?";
+                $stmt = $db->prepare($query);
+                $stmt->bind_param("iss", $attempt, $lastAttempt, $username);
+                $stmt->execute();
+                echo "<script type=\"text/javascript\"> alert(\"Wrong username or password! Please try again.nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
+              } else {
+                // send email to notify user + send temporary password to user
+                // prepare for generating new password
+                $password = randPassword();
+
+                // store new password to database;
+                // dont forget to hash password!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                $query = "UPDATE Account SET Password = ? WHERE Email = ?";
+                $stmt = $db->prepare($query);
+                $stmt->bind_param("ss", $password, $_SESSION["email"]);
+                $stmt->execute();
+
+                // prepare for Email
+                $subject = "Basketball Roster: Suspicious login prevented!";
+                $message =
+                "Hi,
+
+                Someone recently used wrong passwords to try to login to your account - ". $username ."
+                Please use this password to login instead. Remember to change the password immediately after you logged in.
+
+                ".$password."
+
+                Sincerely,
+                Webmaster
+                CPSC431 Basketball Roster
+                ";
+                $header = "From: <webmaster@CPSC431basketballroster.com>";
+
+                // send Email
+                $result = mail($email, $subject, $message, $header);
+
+                $_SESSION["timeout"] = $nextAttempt;
+
+                echo "<script type=\"text/javascript\"> alert(\"You have exceed the number of allowed login attempts.nPlease try again later.nnYour next login time will be ". $nextAttemptFormat . "\")</script>";
+              }
+          } else { // first time the username is found, record it in the database
+            $lastAttempt = date("Y-m-d H:i:s");
+            $attempt = 1;
+            $query = "INSERT INTO LoginAttempts (Username, Attempt, LastAttempt) VALUES (?, ?, ?)";
+            $stmt = $db->prepare($query);
+            $stmt->bind_param("sis", $username, $attempt, $lastAttempt);
+            $stmt->execute();
+            echo "<script type=\"text/javascript\"> alert(\"Wrong username or password! Please try again.nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
+          }
+        } else {
+          // no username in database, but pretend that this username is in the database
+          // check if that non-existed username has record in the loginAttempts or not
+          $query = "SELECT Attempt, LastAttempt FROM LoginAttempts WHERE Username = ?";
+          $stmt = $db->prepare($query);
+          $stmt->bind_param("s", $username);
+          $stmt->execute();
+          $stmt->store_result();
+          $stmt->bind_result($attempt, $lastAttempt);
+          $stmt->data_seek(0);
+          while($stmt->fetch()){
+            // fetch the latest one
+          }
+          if($stmt->num_rows > 0) {
+            // there exists this non-existed username in the database
+            // check if the time is in 2 mins interval
+            $lastAttemptCheck = date("Y-m-d H:i:s");
+            $diff = strtotime($lastAttemptCheck) - strtotime($lastAttempt);
+            if ($diff > 120) { // if different is > 2 minutes (120 seconds)
+              // not in 2 mins interval
+              $attempt = 1;
+              $disable = false;
+            } else {
+              // within 2 mins interval
+              if ($attempt < 3) {
+                $attempt = $attempt + 1;
+                $disable = false;
+              }
+              else {
+                $disable = true;
+                // update the last attempt
+                $lastAttempt = $lastAttemptCheck;
+                $nextAttempt = date("Y-m-d H:i:s", strtotime("+5 minutes"));
+
+                // reformat for the user's ease of reading
+                $nextAttemptFormat = date("D F d, Y at g:i:s A", strtotime($nextAttempt));
+
+                $query = "UPDATE LoginAttempts SET LastAttempt = ?, NextAttempt = ? WHERE Username = ?";
+                $stmt = $db->prepare($query);
+                $stmt->bind_param("sss", $lastAttempt, $nextAttempt, $username);
+                $stmt->execute();
+              }
+            }
+            // update in database if < 4 invalid login
+            if (!$disable) {
+              $lastAttempt = date("Y-m-d H:i:s");
+              $query = "UPDATE LoginAttempts SET Attempt = ?, LastAttempt = ? WHERE Username = ?";
+              $stmt = $db->prepare($query);
+              $stmt->bind_param("iss", $attempt, $lastAttempt, $username);
+              $stmt->execute();
+              echo "<script type=\"text/javascript\"> alert(\"Wrong username or password! Please try again.nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
+            } else {
+              // need to set duration 5 minutes until the user can login again
+              // get the latest time?
+
+              echo '<script type="text/javascript"> alert("You have exceed the number of allowed login attempts.nPlease try again later.")</script>';
+            }
+          } else { // first time the username is found, record it in the database
+            $lastAttempt = date("Y-m-d H:i:s");
+            $attempt = 1;
+            $query = "INSERT INTO LoginAttempts (Username, Attempt, LastAttempt) VALUES (?, ?, ?)";
+            $stmt = $db->prepare($query);
+            $stmt->bind_param("sis", $username, $attempt, $lastAttempt);
+            $stmt->execute();
+            echo "<script type=\"text/javascript\"> alert(\"Wrong username or password! Please try again.nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
+          }
+        }
+      }
+    }*/
+	   /* This is the end of Suchartee Kitisopakul's part */
+	 }
+ }
     ?>
 
 
