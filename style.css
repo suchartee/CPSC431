@@ -14,10 +14,6 @@ hr {
   background-image: linear-gradient(to right, rgba(255,0,0,0), #ffffff, rgba(255,0,0,0)); /* transparent --> white --> transparent */
 }
 
-
-
-
-
 .drop_menu {
 	background:#594f4f;
 	padding:0;
@@ -180,6 +176,7 @@ caption {
   padding:0px 0px 30px 0px;
   border: #a4dbd8 4px solid;
 }
+
 
 .smallboxleft{
   background:#a4dbd8;

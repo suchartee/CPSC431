@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Welcome to Basketball Roster Project</title>
+  <title>Welcome to Basketball Roster</title>
   <link rel="stylesheet" href="style.css">
 </head>
 

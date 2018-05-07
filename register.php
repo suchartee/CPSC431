@@ -73,7 +73,7 @@
           .'\n- At least 6 characters long'
           .'\n- Contain at least one lowercase and uppercase letter '
           .'\n- Have at least one number  '
-          .'\n- Contain no special characters (such as @))';
+          .'\n- Contain at least one special characters (such as @))';
         echo '<script type="text/javascript">';
         echo 'alert("'.$password_warning.'")';
         echo  '</script>';
