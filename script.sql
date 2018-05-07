@@ -1,4 +1,4 @@
-INSERT INTO Team (TeamName) VALUES 
+INSERT INTO Team (TeamName) VALUES
 ('Lakers'),
 ('Golden State Warrior'),
 ('Titan CSUF Basketball'),

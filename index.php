@@ -54,12 +54,14 @@
           $_SESSION["email"] = $email;
           $_SESSION["role"] = $role;
           $_SESSION["authenticated"] = 'yes';
+          $_SESSION["lastlogin"] = date("Y-m-d H:i:s");
         }
 
+
         // update last login time
-        $query = "UPDATE Account SET LastLogin = now() WHERE Username = ?";
+        $query = "UPDATE Account SET LastLogin = ? WHERE Username = ?";
         $stmt = $db->prepare($query);
-        $stmt->bind_param("s", $username);
+        $stmt->bind_param("ss", $_SESSION["lastlogin"], $username);
         $stmt->execute();
 
         // Previous db connection using accountauth does not Have
@@ -85,7 +87,7 @@
     if (isset($_SESSION["timeout"]) && !empty($_SESSION["timeout"])) {
       if ($_SESSION["timeout"] > date("Y-m-d H:i:s")) {
         // cannot login
-        echo '<script type=\"text/javascript\"> alert(\"You still have to wait. Be patient!\")</script>';
+        echo '<script type="text/javascript"> alert("You still have to wait. Be patient!")</script>';
       } else {
         // can log in now
         $lastAttempt = $_SESSION["timeout"];

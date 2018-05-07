@@ -56,6 +56,14 @@
       }
       ?>
       </h3>
+      <h2 style="text-align:left; padding-left: 10%; color:#594F4F;">
+      Last Login:</h2>
+      <h3 style="text-align:left; padding-left: 20%;">
+        <?php
+        $dt = DateTime::createFromFormat("Y-m-d H:i:s", $_SESSION["lastlogin"]);
+        echo $dt->format("l j F Y, H:i:s A");
+        ?>
+      </h3>
     <a href="changepassword.php"><input type="button" class="btn_reg" value="Change Password" name="changepassword"/></a>
     </div>
   </div>
