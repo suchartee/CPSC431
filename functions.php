@@ -75,7 +75,4 @@ function get_all_buttons() {
     get_buttons("buttons_manager");
     get_buttons("buttons_admin");
 }
-
-
-
 ?>

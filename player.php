@@ -32,18 +32,104 @@
 <body>
   <?php
     include 'logged_navbar.php';
-  ?>
+    ?>
+
+
+
 
   <div class="header">
-    <select name="search" id="search" onchange="showfield(this.options[this.selectedIndex].value)">
+    <form action="player.php" method="post">
+    <select name="searchbox" id="search" onchange="showfield(this.options[this.selectedIndex].value)">
       <option value="viewAllPlayer">View All Player</option>
       <option value="searchByFirstName">Search By First Name</option>
       <option value="searchByLastName">Search By Last Name</option>
       <option value="searchByTeam">Search By Team Name</option>
     </select>
-    <input type="text" id="criteria" style="display: none;" />
-    <input type="button" id="searchButton" style="display: none;" value="Search"/>
+    <input type="text" name="textbox" id="criteria" style="display: none;" />
+    <input type="submit" id="searchButton" value="Search"/>
+  </form>
   </div>
+
+
+  <?php
+  // by default, all player is listed
+  if (isset($_POST["searchbox"])) {
+    // check SQL injection
+    $searchtextbox = lcfirst(strip_tags(htmlspecialchars($_POST["textbox"]))) . "%"; // First letter uppercase and search anything that starts with the value in textbox
+    switch($_POST["searchbox"]) {
+      case "searchByFirstName":
+        $query = "SELECT FirstName, LastName, TeamName FROM Player JOIN Team on teamID = Team.ID WHERE FirstName LIKE ? ORDER BY TeamName, LastName";
+      break;
+      case "searchByLastName":
+        $query = "SELECT FirstName, LastName, TeamName FROM Player JOIN Team on teamID = Team.ID WHERE LastName LIKE ? ORDER BY TeamName, FirstName";
+      break;
+      case "searchByTeam":
+        $query = "SELECT FirstName, LastName, TeamName FROM Player JOIN Team on teamID = Team.ID WHERE TeamName LIKE ? ORDER BY TeamName, LastName";
+      break;
+      default:
+      break;
+    }
+    if (isset($_POST["textbox"]) && !empty($_POST["textbox"])) {
+      $count = 1;
+      $db = configDB($_SESSION["role"]);
+      $stmt = $db->prepare($query);
+      $stmt->bind_param("s", $searchtextbox);
+      $stmt->execute();
+      $stmt->store_result();
+      $stmt->bind_result($firstname, $lastname, $teamname);
+
+      $stmt->data_seek(0);
+      echo "<div class=\"header\" style=\"display:table;\">All Player</div>
+            <div class=\"container\">
+            <table>
+              <tr>
+                <th>No.</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Team Name</th>
+              </tr>";
+          while( $stmt->fetch() ) {
+                echo "<tr>
+                  <td>". $count++ ."</td>
+                  <td>". $firstname ."</td>
+                  <td>". $lastname ."</td>
+                  <td>". $teamname ."</td>
+                </tr>";
+          }
+      echo "</table>
+      </div>";
+    } else {
+      $count = 1;
+      $db = configDB($_SESSION["role"]);
+      $query = "SELECT FirstName, LastName, TeamName FROM Player JOIN Team on teamID = Team.ID ORDER BY TeamName, LastName";
+      $stmt = $db->prepare($query);
+      $stmt->execute();
+      $stmt->store_result();
+      $stmt->bind_result($firstname, $lastname, $teamname);
+
+      $stmt->data_seek(0);
+      echo "<div class=\"header\" style=\"display:table;\">All Player</div>
+            <div class=\"container\">
+            <table>
+              <tr>
+                <th>No.</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Team Name</th>
+              </tr>";
+          while( $stmt->fetch() ) {
+                echo "<tr>
+                  <td>". $count++ ."</td>
+                  <td>". $firstname ."</td>
+                  <td>". $lastname ."</td>
+                  <td>". $teamname ."</td>
+                </tr>";
+          }
+      echo "</table>
+      </div>";
+    }
+  }
+  ?>
 
 </body>
 </html>
