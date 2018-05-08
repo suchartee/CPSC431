@@ -72,61 +72,68 @@
     if (isset($_POST["textbox"]) && !empty($_POST["textbox"])) {
       $count = 1;
       $db = configDB($_SESSION["role"]);
-      $stmt = $db->prepare($query);
-      $stmt->bind_param("s", $searchtextbox);
-      $stmt->execute();
-      $stmt->store_result();
-      $stmt->bind_result($firstname, $lastname, $teamname);
+      if ($stmt = $db->prepare($query)) {
+        $stmt->bind_param("s", $searchtextbox);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($firstname, $lastname, $teamname);
 
-      $stmt->data_seek(0);
-      echo "<div class=\"header\" style=\"display:table;\">All Player</div>
-            <div class=\"container\">
-            <table>
-              <tr>
-                <th>No.</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Team Name</th>
-              </tr>";
-          while( $stmt->fetch() ) {
-                echo "<tr>
-                  <td>". $count++ ."</td>
-                  <td>". $firstname ."</td>
-                  <td>". $lastname ."</td>
-                  <td>". $teamname ."</td>
+        $stmt->data_seek(0);
+        echo "<div class=\"header\" style=\"display:table;\">All Player</div>
+              <div class=\"container\">
+              <table>
+                <tr>
+                  <th>No.</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Team Name</th>
                 </tr>";
-          }
-      echo "</table>
-      </div>";
+            while( $stmt->fetch() ) {
+                  echo "<tr>
+                    <td>". $count++ ."</td>
+                    <td>". $firstname ."</td>
+                    <td>". $lastname ."</td>
+                    <td>". $teamname ."</td>
+                  </tr>";
+            }
+        echo "</table>
+        </div>";
+      } else {
+        echo '<script type="text/javascript"> alert("Error!") </script>';
+      }
+
     } else {
       $count = 1;
       $db = configDB($_SESSION["role"]);
       $query = "SELECT FirstName, LastName, TeamName FROM Player JOIN Team on teamID = Team.ID ORDER BY TeamName, LastName";
-      $stmt = $db->prepare($query);
-      $stmt->execute();
-      $stmt->store_result();
-      $stmt->bind_result($firstname, $lastname, $teamname);
+      if ($stmt = $db->prepare($query)) {
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($firstname, $lastname, $teamname);
 
-      $stmt->data_seek(0);
-      echo "<div class=\"header\" style=\"display:table;\">All Player</div>
-            <div class=\"container\">
-            <table>
-              <tr>
-                <th>No.</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Team Name</th>
-              </tr>";
-          while( $stmt->fetch() ) {
-                echo "<tr>
-                  <td>". $count++ ."</td>
-                  <td>". $firstname ."</td>
-                  <td>". $lastname ."</td>
-                  <td>". $teamname ."</td>
+        $stmt->data_seek(0);
+        echo "<div class=\"header\" style=\"display:table;\">All Player</div>
+              <div class=\"container\">
+              <table>
+                <tr>
+                  <th>No.</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Team Name</th>
                 </tr>";
-          }
-      echo "</table>
-      </div>";
+            while( $stmt->fetch() ) {
+                  echo "<tr>
+                    <td>". $count++ ."</td>
+                    <td>". $firstname ."</td>
+                    <td>". $lastname ."</td>
+                    <td>". $teamname ."</td>
+                  </tr>";
+            }
+        echo "</table>
+        </div>";
+      } else {
+        echo '<script type="text/javascript"> alert("Error!") </script>';
+      }      
     }
   }
   ?>

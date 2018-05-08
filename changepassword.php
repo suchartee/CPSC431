@@ -51,11 +51,14 @@
           } else {
             $db = configDB(5);
             $query = "UPDATE Account SET Password = ? WHERE Username = ?";
-            $stmt = $db->prepare($query);
-            $stmt->bind_param("ss", $password1, $_SESSION["username"]);
-            $stmt->execute();
-            echo '<script type="text/javascript"> alert("Your new password is successfully changed!") </script>';
-            echo "<script>window.location = 'profile.php';</script>";
+            if ($stmt = $db->prepare($query)) {
+              $stmt->bind_param("ss", $password1, $_SESSION["username"]);
+              $stmt->execute();
+              echo '<script type="text/javascript"> alert("Your new password is successfully changed!") </script>';
+              echo "<script>window.location = 'profile.php';</script>";
+            } else {
+                echo '<script type="text/javascript"> alert("Error!") </script>';
+            }
           }
         } else {
           echo '<script type="text/javascript"> alert("Your passwords must be the same!")</script>';

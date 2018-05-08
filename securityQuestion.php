@@ -47,35 +47,37 @@
           // Connect to database
       	  $db = configDB(5);
           $query = "UPDATE Account SET Password = ? WHERE Email = ?";
-          $stmt = $db->prepare($query);
-          $stmt->bind_param("ss", $password, $email);
-      	  $stmt->execute();
+          if ($stmt = $db->prepare($query)) {
+            $stmt->bind_param("ss", $password, $email);
+        	  $stmt->execute();
 
-          // prepare for Email
-          $subject = "Basketball Roster New Password";
-          $message =
-          "Hi,
+            // prepare for Email
+            $subject = "Basketball Roster New Password";
+            $message =
+            "Hi,
 
-          You have requested the new password.
-          Please use this password to login. Remember to change the password immediately after you logged in.
+            You have requested the new password.
+            Please use this password to login. Remember to change the password immediately after you logged in.
 
-          ".$password."
+            ".$password."
 
-          Sincerely,
+            Sincerely,
 
-          Webmaster
-          CPSC431 Basketball Roster
-          ";
-//          $header = "From: <webmaster@CPSC431basketballroster.com>";
+            Webmaster
+            CPSC431 Basketball Roster
+            ";
+  //          $header = "From: <webmaster@CPSC431basketballroster.com>";
 
-          // send Email
-          mail($email, $subject, $message);
+            // send Email
+            mail($email, $subject, $message);
 
 
-          session_destroy(); // destroy the $_SESSION["question"] and $_SESSION["answer"] and $_SESSION["email"] and $_SESSION["database"];;
-          echo '<script type="text/javascript"> alert("Email is sent! Please check your email") </script>';
-          echo "<script>window.location = 'index.php';</script>";
-
+            session_destroy(); // destroy the $_SESSION["question"] and $_SESSION["answer"] and $_SESSION["email"] and $_SESSION["database"];;
+            echo '<script type="text/javascript"> alert("Email is sent! Please check your email") </script>';
+            echo "<script>window.location = 'index.php';</script>";
+          } else {
+            echo '<script type="text/javascript"> alert("Error!") </script>';
+          }
         } else {
         echo '<script type="text/javascript"> alert("Wrong Answer!!") </script>';
       }

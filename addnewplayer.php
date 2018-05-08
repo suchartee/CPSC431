@@ -21,10 +21,12 @@
     include 'logged_navbar.php';
     $db = configDB($_SESSION["role"]);
     $query = "SELECT ID, TeamName FROM Team";
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($teamID, $teamname);
+    if ($stmt = $db->prepare($query)) {
+      $stmt->execute();
+      $stmt->store_result();
+      $stmt->bind_result($teamID, $teamname);
+    }
+
     ?>
 
   <div class="header">
@@ -55,15 +57,18 @@
   if (isset($_POST["submit"])) {
     // check SQL injection
     if (isset($_POST["firstname"]) && !empty($_POST["firstname"]) && isset($_POST["lastname"]) && !empty($_POST["lastname"]) && isset($_POST["teamID"]) && !empty($_POST["teamID"])) {
-      $firstname = ucfirst(strip_tags(htmlspecialchars($_POST["firstname"])));
-      $lastname = ucfirst(strip_tags(htmlspecialchars($_POST["lastname"])));
+      $firstname = ucwords(strip_tags(htmlspecialchars($_POST["firstname"])));
+      $lastname = ucwords(strip_tags(htmlspecialchars($_POST["lastname"])));
       $teamID = strip_tags(htmlspecialchars($_POST["teamID"]));
 
       $query = "INSERT INTO Player (FirstName, LastName, TeamID) VALUES (?, ?, ?)";
-      $stmt = $db->prepare($query);
-      $stmt->bind_param("ssi", $firstname, $lastname, $teamID);
-      $stmt->execute();
-      echo '<script type="text/javascript"> alert("New player is successfully added into the roster!")</script>';
+      if ($stmt = $db->prepare($query)) {
+        $stmt->bind_param("ssi", $firstname, $lastname, $teamID);
+        $stmt->execute();
+        echo '<script type="text/javascript"> alert("New player is successfully added into the roster!")</script>';
+      } else {
+        echo '<script type="text/javascript"> alert("You do not have this privilege!")</script>';
+      }
     }
   }
   ?>

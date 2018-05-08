@@ -99,33 +99,36 @@
             } else {
               $db = configDB(5);
               $query = "SELECT * FROM Account WHERE Email = ?";
-              $stmt = $db->prepare($query);
-              $stmt->bind_param("s", $email);
-              $stmt->execute();
-
-              // check if this email is existed
-              if($stmt->num_rows > 0){
-                // there is the email already in the database
-                echo '<script type="text/javascript"> alert("This email is already exists") </script>';
-              }
-              else {
-                // add this username into database
-                $db = configDB(5);
-                $query = "INSERT INTO Account (Username, Password, Email, RoleID, QuestionNum, Answer) VALUES(?, ?, ?, ?, ?, ?)";
-                $stmt = $db->prepare($query);
-                $stmt->bind_param("sssiis", $username, $password, $email, $role, $question, $answer);
+              if ($stmt = $db->prepare($query)){
+                $stmt->bind_param("s", $email);
                 $stmt->execute();
 
-                if ($stmt) {
-                  // redirect to index.php
-                  echo '<script type="text/javascript"> alert("You are registered") </script>';
-                  echo "<script>window.location = 'index.php';</script>";
+                // check if this email is existed
+                if($stmt->num_rows > 0){
+                  // there is the email already in the database
+                  echo '<script type="text/javascript"> alert("This email is already exists") </script>';
                 }
                 else {
-                  // something is wrong
-                  echo '<script type="text/javascript"> alert("Error!")</script>';
+                  // add this username into database
+                  $db = configDB(5);
+                  $query = "INSERT INTO Account (Username, Password, Email, RoleID, QuestionNum, Answer) VALUES(?, ?, ?, ?, ?, ?)";
+                  $stmt = $db->prepare($query);
+                  $stmt->bind_param("sssiis", $username, $password, $email, $role, $question, $answer);
+                  $stmt->execute();
+
+                  if ($stmt) {
+                    // redirect to index.php
+                    echo '<script type="text/javascript"> alert("You are registered") </script>';
+                    echo "<script>window.location = 'index.php';</script>";
+                  }
+                  else {
+                    // something is wrong
+                    echo '<script type="text/javascript"> alert("Error!")</script>';
+                  }
                 }
-              }
+              } else {
+                echo '<script type="text/javascript"> alert("Error!") </script>';
+              }              
             }
           }
           else {
