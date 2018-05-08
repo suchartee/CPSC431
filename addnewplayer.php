@@ -53,7 +53,6 @@
 
 
   <?php
-  // by default, all player is listed
   if (isset($_POST["submit"])) {
     // check SQL injection
     if (isset($_POST["firstname"]) && !empty($_POST["firstname"]) && isset($_POST["lastname"]) && !empty($_POST["lastname"]) && isset($_POST["teamID"]) && !empty($_POST["teamID"])) {

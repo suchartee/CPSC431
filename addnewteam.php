@@ -12,7 +12,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Add New Player Page</title>
+  <title>Add New Team Page</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -22,7 +22,7 @@
     ?>
 
   <div class="header">
-    Add New Player
+    Add New Team
   </div>
   <div class="container">
   <div class="box">
@@ -35,7 +35,6 @@
 
 
   <?php
-  // by default, all player is listed
   if (isset($_POST["submit"])) {
     // check SQL injection
     if (isset($_POST["teamname"]) && !empty($_POST["teamname"])) {
