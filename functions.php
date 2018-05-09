@@ -30,10 +30,6 @@ function get_buttons($button_table) {
   $button_name = "";
   $button_link = "";
 
-  // Even or odd counter to determine <div class>
-  // as smallboxleft or smallboxright
-  $counter = 0;
-
   $query = "SELECT Name, Link FROM ".$button_table;
 
   // Checks if the user has permissions to access
@@ -44,35 +40,177 @@ function get_buttons($button_table) {
     $stmt->store_result();
     $stmt->bind_result($button_name, $button_link);
 
+    /*echo  "<div class=\"btn-group\">";
     while($stmt->fetch()) {
       echo "<a href=\"".$button_link."\">";
-      echo  "<div class=\"";
+      echo    "<button>".$button_name."</button>";
+      echo "</a>";
+    }
+    echo  "</div>";*/
+    $count = 0;
+    while($stmt->fetch()) {
+      $button[$count]['buttonname'] = $button_name;
+      $button[$count]['buttonlink'] = $button_link;
 
-      if ($counter % 2 != 0) {
-        echo "smallboxright";
+      // filter the keyword for nicer arrangement
+      if (strpos(strtolower($button_name), 'player') !== false) {
+        $button[$count]['type'] = 1;
+      } else if (strpos(strtolower($button_name), 'team') !== false) {
+        $button[$count]['type'] = 2;
+      } else if (strpos(strtolower($button_name), 'coach') !== false) {
+        $button[$count]['type'] = 3;
+      } else if (strpos(strtolower($button_name), 'match') !== false) {
+        $button[$count]['type'] = 4;
+      } else if (strpos(strtolower($button_name), 'statistic') !== false) {
+        $button[$count]['type'] = 5;
+      } else if (strpos(strtolower($button_name), 'account') !== false) {
+        $button[$count]['type'] = 6;
       } else {
-        echo "smallboxleft";
+        $button[$count]['type'] = 0;
       }
 
-      echo    "\">";
-      echo    "<h3>".$button_name."</h3>";
-      echo    "<hr/>";
-      // Button descriptions
-      //echo    "<h6>";
-      //echo      "All the player related is here.";
-      //echo    "</h6>";
-      echo  "</div>";
-      echo "</a>";
-
-      ++$counter;
+      $count++;
     }
+    // return all buttons retrieved from query
+    return $button;
   }
 }
 
 function get_all_buttons() {
-    get_buttons("buttons_observer");
-    get_buttons("buttons_operator");
-    get_buttons("buttons_manager");
-    get_buttons("buttons_admin");
+    $button_observer = get_buttons("buttons_observer");
+    $button_operator = get_buttons("buttons_operator");
+    $button_manager = get_buttons("buttons_manager");
+    $button_admin = get_buttons("buttons_admin");
+
+    // some of these buttons may be null, make sure it is an array so that we can combine
+    $buttons = array();
+    if(is_array($button_observer)) {
+        $buttons = array_merge($buttons, $button_observer);
+    }
+    if(is_array($button_operator)) {
+        $buttons = array_merge($buttons, $button_operator);
+    }
+    if(is_array($button_manager)) {
+        $buttons = array_merge($buttons, $button_manager);
+    }
+    if(is_array($button_admin)) {
+        $buttons = array_merge($buttons, $button_admin);
+    }
+
+
+    $stack0 = array();
+    $stack1 = array();
+    $stack2 = array();
+    $stack3 = array();
+    $stack4 = array();
+    $stack5 = array();
+    $stack6 = array();
+
+    // divide into 6 arrays for the arrangement
+    foreach ($buttons as $button) {
+      switch($button['type']) {
+        case 0: array_push($stack0, $button);
+        break;
+        case 1: array_push($stack1, $button);
+        break;
+        case 2: array_push($stack2, $button);
+        break;
+        case 3: array_push($stack3, $button);
+        break;
+        case 4: array_push($stack4, $button);
+        break;
+        case 5: array_push($stack5, $button);
+        break;
+        case 6: array_push($stack6, $button);
+        break;
+      }
+    }
+
+    //$allbuttons = array_merge($stack0, $stack1,$stack2,$stack3,$stack4,$stack5,$stack6);
+    /*foreach ($allbuttons as $allbutton) {
+      echo $allbutton['type']." + ";
+      echo $allbutton['buttonname']." + ";
+      echo $allbutton['buttonlink']." --- ";
+    }*/
+
+    echo "<div class=\"btn-group\">";
+    if (!empty($stack0)) {
+      echo "<h3>Main Menu</h3>";
+    }
+    foreach($stack0 as $stack) {
+      echo "<a href=\"".$stack['buttonlink']."\">";
+      echo    "<button>".$stack['buttonname']."</button>";
+      echo "</a>";
+    }
+    echo "</div><br/>";
+
+    echo "<div class=\"btn-group\">";
+    if (!empty($stack1)) {
+      echo "<h3>Player</h3>";
+    }
+    foreach($stack1 as $stack) {
+      echo "<a href=\"".$stack['buttonlink']."\">";
+      echo    "<button>".$stack['buttonname']."</button>";
+      echo "</a>";
+    }
+    echo "</div><br/>";
+
+    echo "<div class=\"btn-group\">";
+    if (!empty($stack2)) {
+      echo "<h3>Team</h3>";
+    }
+    foreach($stack2 as $stack) {
+      echo "<a href=\"".$stack['buttonlink']."\">";
+      echo    "<button>".$stack['buttonname']."</button>";
+      echo "</a>";
+    }
+    echo "</div><br/>";
+
+    echo "<div class=\"btn-group\">";
+    if (!empty($stack3)) {
+      echo "<h3>Coach</h3>";
+    }
+    foreach($stack3 as $stack) {
+      echo "<a href=\"".$stack['buttonlink']."\">";
+      echo    "<button>".$stack['buttonname']."</button>";
+      echo "</a>";
+    }
+    echo "</div><br/>";
+
+    echo "<div class=\"btn-group\">";
+    if (!empty($stack4)) {
+      echo "<h3>Match</h3>";
+    }
+    foreach($stack4 as $stack) {
+      echo "<a href=\"".$stack['buttonlink']."\">";
+      echo    "<button>".$stack['buttonname']."</button>";
+      echo "</a>";
+    }
+    echo "</div><br/>";
+
+    echo "<div class=\"btn-group\">";
+    if (!empty($stack5)) {
+      echo "<h3>Statistics</h3>";
+    }
+    foreach($stack5 as $stack) {
+      echo "<a href=\"".$stack['buttonlink']."\">";
+      echo    "<button>".$stack['buttonname']."</button>";
+      echo "</a>";
+    }
+    echo "</div><br/>";
+
+    echo "<div class=\"btn-group\">";
+    if (!empty($stack6)) {
+      echo "<h3>Privileges</h3>";
+    }
+    foreach($stack6 as $stack) {
+      echo "<a href=\"".$stack['buttonlink']."\">";
+      echo    "<button>".$stack['buttonname']."</button>";
+      echo "</a>";
+    }
+    echo "</div><br/>";
+
 }
+
+
 ?>
