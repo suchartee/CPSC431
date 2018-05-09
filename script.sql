@@ -1,8 +1,8 @@
-INSERT INTO Team (TeamName) VALUES
-('Lakers'),
-('Golden State Warrior'),
-('Titan CSUF Basketball'),
-('Bruins UCLA Basketball')
+INSERT INTO Team (TeamName, WinCount, lostCount) VALUES
+('Lakers', 5, 2),
+('Golden State Warrior', 4, 3),
+('Titan CSUF Basketball', 10, 8),
+('Bruins UCLA Basketball', 3, 2)
 ;
 
 INSERT INTO Player (FirstName, LastName, TeamID) VALUES
@@ -30,3 +30,8 @@ INSERT INTO Coach (FirstName, LastName, TeamID) VALUES
 ('Tom', 'Bettens', 3),
 ('Somename', 'Somefamily', 4)
 ;
+
+UPDATE Team SET CoachID = 1 WHERE ID = 1;
+UPDATE Team SET CoachID = 2 WHERE ID = 2;
+UPDATE Team SET CoachID = 3 WHERE ID = 3;
+UPDATE Team SET CoachID = 4 WHERE ID = 4;
