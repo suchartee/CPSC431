@@ -11,11 +11,11 @@
     <li><a href='index.php'>Home</a></li>
     <li><a href='about.php'>About</a></li>
   </ul>
-  
+
   <div id="about-page">
     <h1>- About Us -</h1>
     <br/>
-    <h3>Team Members:</h3>
+    <h2>Team Members:</h2>
       1. Don Vu
       <br/>
       2. Suchartee Kitisopakul
