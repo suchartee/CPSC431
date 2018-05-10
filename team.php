@@ -108,10 +108,10 @@
             $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON Coach.ID = CoachID WHERE WinCount = (SELECT MIN(WinCount) FROM Team)";
           break;
           case "searchByMostLost":
-            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON Coach.ID = CoachID WHERE lostCount = (SELECT Max(lostCount) FROM Team)";
+            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON Coach.ID = CoachID WHERE lostCount = (SELECT Max(LostCount) FROM Team)";
           break;
           case "searchByLeastLost":
-            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON Coach.ID = CoachID WHERE lostCount = (SELECT MIN(WinCount) FROM Team)";
+            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON Coach.ID = CoachID WHERE lostCount = (SELECT MIN(LostCount) FROM Team)";
           break;
           default:
             $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON CoachID = Coach.ID ORDER BY TeamName";
