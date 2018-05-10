@@ -55,7 +55,7 @@
     // by default, all team is displayed
     if (empty($_POST["searchbutton"])) {
       $count = 1;
-      $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON CoachID = Coach.ID ORDER BY TeamName";
+      $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team LEFT JOIN Coach ON CoachID = Coach.ID ORDER BY TeamName";
       $db = configDB($_SESSION["role"]);
       if ($stmt = $db->prepare($query)) {
         $stmt->execute();

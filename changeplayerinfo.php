@@ -19,6 +19,7 @@
 <body>
   <?php
     include 'logged_navbar.php';
+    // prepare for the <select><option></option></select>
     $db = configDB($_SESSION["role"]);
     $query = "SELECT ID, TeamName FROM Team";
     if ($stmt = $db->prepare($query)) {
@@ -26,6 +27,8 @@
       $stmt->store_result();
       $stmt->bind_result($teamidDB, $teamnameDB);
     }
+
+    // retrieve info from previous page (user's choice)
     if (isset($_GET["firstname"]) && isset($_GET["lastname"]) && isset($_GET["teamid"]) && isset($_GET["teamname"])) {
       $_SESSION["playerid"] = $_GET["playerid"];
       $firstname = $_GET["firstname"];
@@ -47,8 +50,11 @@
   <div class="container">
   <div class="box">
   <form action="changeplayerinfo.php" method="post">
+  <label>Player's First Name</label><br/>
   <input type="text" name="firstname" value="<?php echo $firstname ?>" class="textbox" required/><br/>
+  <label>Player's Last Name</label><br/>
   <input type="text" name="lastname" value="<?php echo $lastname ?>" class="textbox" required/><br/>
+  <label>Player's Team Name</label><br/>
   <select class="select" name="teamID" required>
     <option value="<?php echo $_SESSION["teamid"]?>"><?php echo $teamname ?></option>
           <?php
@@ -75,11 +81,6 @@
       if ($teamidDB == $_SESSION["teamid"]) {
         $teamidDB = $_SESSION["teamid"];
       }
-
-      echo $firstnameDB;
-      echo $lastnameDB;
-      echo $teamidDB;
-      echo $_SESSION["playerid"];
 
       unset($_SESSION["playerid"]);
       unset($_SESSION["teamid"]);
