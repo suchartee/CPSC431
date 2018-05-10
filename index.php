@@ -32,8 +32,6 @@
   <p>Forgot your password? <a href="forgotPassword.php"><u style="color:#f1c40f;">Click Here!</u></a></p>
 
   <?php
-  if (isset($_SESSION["username"]))
-  var_dump($_SESSION["username"]);
   //echo $_SESSION["username"];
   /*--------------------------------------This is the beginning of Suchartee Kitisopakul's part-----------------------------------------------------*/
   if ((isset($_POST["username"]) && !empty($_POST["username"])) && (isset($_POST["password"]) && (!empty($_POST["password"])))) {
