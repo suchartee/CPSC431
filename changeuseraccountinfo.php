@@ -19,15 +19,7 @@
 <body>
   <?php
     include 'logged_navbar.php';
-    // prepare for the <select><option></option></select>
     $db = configDB($_SESSION["role"]);
-    // role
-    $query = "SELECT ID, RoleName FROM Role";
-    if ($stmt = $db->prepare($query)) {
-      $stmt->execute();
-      $stmt->store_result();
-      $stmt->bind_result($roleidDB, $rolenameDB);
-    }
 
     // retrieve info from previous page (user's choice)
     if (isset($_GET["accountid"]) && isset($_GET["username"]) && isset($_GET["email"]) && isset($_GET["roleid"]) && isset($_GET["rolename"]) && isset($_GET["questionid"]) && isset($_GET["question"]) && isset($_GET["answer"])) {
@@ -60,7 +52,17 @@
   <label>Username</label><br/>
   <input type="text" name="username" value="<?php echo $username ?>" class="textbox" readonly="readonly" required/><br/>
   <label>Email</label><br/>
-  <input type="text" name="email" value="<?php echo $email ?>" class="textbox" required/><br/>
+  <input type="email" name="email" value="<?php echo $email ?>" class="textbox" required/><br/>
+  <?php
+  // prepare for the <select><option></option></select>
+  // role
+  $query = "SELECT ID, RoleName FROM Role";
+  if ($stmt = $db->prepare($query)) {
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($roleidDB, $rolenameDB);
+  }
+   ?>
   <label>Role</label><br/>
   <select class="select" name="roleid" required>
     <option value="<?php echo $_SESSION["roleid"]?>"><?php echo $rolename ?></option>
@@ -93,6 +95,7 @@
   </select><br/>
   <label>Answer</label><br/>
   <input type="text" name="answer" value="<?php echo $answer ?>" class="textbox" required/><br/>
+  <a href="changeuserpassword.php"><input type="button" class="btn_login" value="Change User Password" name="changeuserpassword"/></a>
   <input type="submit" class="btn_reg" value="Modify User Account" name="submit"/>
   </form>
   </div>
