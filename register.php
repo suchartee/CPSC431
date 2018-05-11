@@ -1,6 +1,5 @@
 <?php
   require_once "config.php";
-
 ?>
 
 <!DOCTYPE html>
@@ -26,11 +25,21 @@
       <input type="email" name="email" placeholder="Email" class="textbox" value="<?php if(isset($_POST['email']) && !empty($_POST['email'])) { echo $_POST['email']; } ?>" required/><br/>
       <select class="select" name="question" required>
         <option disabled selected value>Security Question</option>
-        <option value="1">Where were you when you had your first kiss?</option>
-        <option value="2">Where were you New Year's 2000?</option>
-        <option value="3">What is the last name of the teacher who gave you your first failing grade?</option>
-        <option value="4">What was the last name of your third grade teacher?</option>
-        <option value="5">Where were you when you first heard about 9/11?</option>
+        <?php
+        $db = configDB(5);
+        // prepare for <select><option></option></select>
+        // question
+        $query = "SELECT ID, Question FROM Question";
+        if ($stmt = $db->prepare($query)) {
+          $stmt->execute();
+          $stmt->store_result();
+          $stmt->bind_result($questionID, $question);
+        }
+        $stmt->data_seek(0);
+        while ($stmt->fetch()){
+          echo "<option value=\"".$questionID."\">".$question."</option>";
+        }
+        ?>
       </select>
       <input type="text" name="answer" placeholder="Answer" class="textbox" required/>
 
@@ -46,7 +55,7 @@
       $username = trim(strtolower(strip_tags(htmlspecialchars($_POST['username']))));
       $password1 = strip_tags(htmlspecialchars($_POST['password1']));
       $password2 = strip_tags(htmlspecialchars($_POST['password2']));
-      $email = strtolower(strip_tags(htmlspecialchars(strtolower($_POST['email']))));
+      $email = strtolower(strip_tags(htmlspecialchars($_POST['email'])));
       $role = 1;
 
       // Check if question is selected
@@ -84,51 +93,49 @@
         } else {
           // Check if password and confirm password are the same
           if ($password1 == $password2) {
-            $db = configDB(5);
             // DONT FORGET TO HASH PASSWORD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             $password = $password1;
+            $db = configDB(5);
             $query = "SELECT * FROM Account WHERE Username = ?";
-            $stmt = $db->prepare($query);
-            $stmt->bind_param("s", $username);
-            $stmt->execute();
+            if ($stmt = $db->prepare($query)) {
+              $stmt->bind_param("s", $username);
+              $stmt->execute();
 
-            // check if this username is existed
-            if($stmt->num_rows > 0){
-              // there is the username already in the database
-              echo '<script type="text/javascript"> ert("This username is already exists") </script>';
-            } else {
-              $db = configDB(5);
-              $query = "SELECT * FROM Account WHERE Email = ?";
-              if ($stmt = $db->prepare($query)){
-                $stmt->bind_param("s", $email);
-                $stmt->execute();
-
-                // check if this email is existed
-                if($stmt->num_rows > 0){
-                  // there is the email already in the database
-                  echo '<script type="text/javascript"> alert("This email is already exists") </script>';
-                }
-                else {
-                  // add this username into database
-                  $db = configDB(5);
-                  $query = "INSERT INTO Account (Username, Password, Email, RoleID, QuestionNum, Answer) VALUES(?, ?, ?, ?, ?, ?)";
-                  $stmt = $db->prepare($query);
-                  $stmt->bind_param("sssiis", $username, $password, $email, $role, $question, $answer);
+              // check if this username is existed
+              if($stmt->num_rows > 0){
+                // there is the username already in the database
+                echo '<script type="text/javascript"> alert("This username is already exists") </script>';
+              } else {
+                $db = configDB(5);
+                $query = "SELECT * FROM Account WHERE Email = ?";
+                if ($stmt = $db->prepare($query)) {
+                  $stmt->bind_param("s", $email);
                   $stmt->execute();
 
-                  if ($stmt) {
-                    // redirect to index.php
-                    echo '<script type="text/javascript"> alert("You are registered") </script>';
-                    echo "<script>window.location = 'index.php';</script>";
+                  // check if this email is existed
+                  if($stmt->num_rows > 0){
+                    // there is the email already in the database
+                    echo '<script type="text/javascript"> alert("This email is already exists") </script>';
                   }
                   else {
-                    // something is wrong
-                    echo '<script type="text/javascript"> alert("Error!")</script>';
+                    // add this username into database
+                    $db = configDB(5);
+                    $query = "INSERT INTO Account (Username, Password, Email, RoleID, QuestionNum, Answer) VALUES(?, ?, ?, ?, ?, ?)";
+                    if ($stmt = $db->prepare($query)) {
+                      $stmt->bind_param("sssiis", $username, $password, $email, $role, $question, $answer);
+                      echo '<script type="text/javascript"> alert("You are registered") </script>';
+                      echo "<script>window.location = 'index.php';</script>";
+                    } else {
+                      // prepare is fail
+                      echo '<script type="text/javascript"> alert("insert Error!")</script>';
+                    }
                   }
+                } else {
+                  echo '<script type="text/javascript"> alert("email Error!") </script>';
                 }
-              } else {
-                echo '<script type="text/javascript"> alert("Error!") </script>';
-              }              
+              }
+            } else {
+              echo '<script type="text/javascript"> alert("username Error!")</script>';
             }
           }
           else {
