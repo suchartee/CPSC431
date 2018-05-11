@@ -50,7 +50,7 @@ $db = configDB(5);
      ?>
    </ul>
 
-
+<form action="test.php" method="post">
    <div class="header">
      <select name="search" id="search" onchange="showfield(this.options[this.selectedIndex].value)">
        <option value="viewAllPlayer">View All Player</option>
@@ -58,11 +58,20 @@ $db = configDB(5);
        <option value="searchByLastName">Search By Last Name</option>
        <option value="searchByTeam">Search By Team Name</option>
      </select>
-     <input type="text" id="criteria" style="display: none;" />
-     <input type="button" id="searchButton" style="display: none;" value="Search"/>
+       <input type="date" name="datepicker" id="datepicker" />
+     <input type="submit" name="searchButton" id="searchButton" value="Search"/>
    </div>
+ </form>
 
+<?php
+if (isset($_POST["searchButton"])) {
+  $date = date("Y-m-d", strtotime($_POST["datepicker"]));
+  echo $date;
+} else {
+  echo "Yike";
+}
 
+?>
 </body>
 </html>
 

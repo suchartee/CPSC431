@@ -35,3 +35,10 @@ UPDATE Team SET CoachID = 1 WHERE ID = 1;
 UPDATE Team SET CoachID = 2 WHERE ID = 2;
 UPDATE Team SET CoachID = 3 WHERE ID = 3;
 UPDATE Team SET CoachID = 4 WHERE ID = 4;
+
+INSERT INTO Matches (HomeTeamID, AwayTeamID, HomeScore, AwayScore, DatePlayed, WinTeamID, LostTeamID) VALUES
+(1, 2, 35, 40, '2018-4-25', 2, 1),
+(4, 3, 50, 20, '2018-4-20', 4, 3),
+(2, 4, 20, 42, '2018-4-25', 4, 2),
+(3, 1, 45, 35, '2018-4-20', 3, 1)
+;
