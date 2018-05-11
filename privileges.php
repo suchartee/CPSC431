@@ -53,6 +53,7 @@
         <option value="searchByUsername">Search By Username</option>
         <option value="searchByEmail">Search By Email</option>
         <option value="searchByRole">Search By Role</option>
+        <option value="searchByLastLogin">Search By Login Time in The Past 48 Hours</option>
       </select>
       <input type="text" name="textbox" id="criteria" style="display: none;" />
 
@@ -74,12 +75,12 @@
     // by default, all player is displayed
     if (empty($_POST["searchbutton"])) {
       $count = 1;
-      $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID ORDER BY RoleName, Username";
+      $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID ORDER BY RoleName, Username";
       $db = configDB($_SESSION["role"]);
       if ($stmt = $db->prepare($query)) {
         $stmt->execute();
         $stmt->store_result();
-        $stmt->bind_result($accountid, $username, $email, $rolename, $question, $answer);
+        $stmt->bind_result($accountid, $username, $email, $rolename, $question, $answer, $lastlogin);
 
         $stmt->data_seek(0);
         echo "<div class=\"header\" style=\"display:table;\">All Account</div>
@@ -92,9 +93,10 @@
                   <th>Role Name</th>
                   <th>Security Question</th>
                   <th>Answer</th>
+                  <th>Last Login</th>
                 </tr>";
             while( $stmt->fetch() ) {
-                  $row = array('id'=>$count++, 'accountid'=>$accountid, 'username'=>$username, 'email'=>$email,'rolename'=>$rolename, 'question'=>$question, 'answer'=>$answer);
+                  $row = array('id'=>$count++, 'accountid'=>$accountid, 'username'=>$username, 'email'=>$email,'rolename'=>$rolename, 'question'=>$question, 'answer'=>$answer, 'lastlogin'=>$lastlogin);
                   echo "<tr>
                     <td>". $row['id'] ."</td>
                     <td>". $row['username'] ."</td>
@@ -102,6 +104,7 @@
                     <td>". $row['rolename'] ."</td>
                     <td>". $row['question'] ."</td>
                     <td>". $row['answer'] ."</td>
+                    <td>". $row['lastlogin'] ."</td>
                   </tr>";
             }
         echo "</table>
@@ -113,16 +116,19 @@
           // check what kind of selection is
           switch($_POST["searchbox"]) {
             case "searchByUsername":
-              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID WHERE Username LIKE ? ORDER BY Username";
+              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID WHERE Username LIKE ? ORDER BY Username";
             break;
             case "searchByEmail":
-              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID WHERE Email LIKE ? ORDER BY Email";
+              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID WHERE Email LIKE ? ORDER BY Email";
             break;
             case "searchByRole":
-              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID WHERE Role.ID = ? ORDER BY RoleName, Username";
+              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID WHERE Role.ID = ? ORDER BY RoleName, Username";
+            break;
+            case "searchByLastLogin":
+              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID WHERE LastLogin >= DATE_SUB(NOW(), INTERVAL 48 HOUR) ORDER BY Username";
             break;
             default:
-              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID ORDER BY RoleName, Username";
+              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID ORDER BY RoleName, Username";
             break;
           }
           $count = 1;
@@ -138,7 +144,7 @@
             }
             $stmt->execute();
             $stmt->store_result();
-            $stmt->bind_result($accountid, $username, $email, $rolename, $question, $answer);
+            $stmt->bind_result($accountid, $username, $email, $rolename, $question, $answer, $lastlogin);
 
             $stmt->data_seek(0);
             echo "<div class=\"header\" style=\"display:table;\">All Account</div>
@@ -151,9 +157,10 @@
                       <th>Role Name</th>
                       <th>Security Question</th>
                       <th>Answer</th>
+                      <th>Last Login</th>
                     </tr>";
                 while( $stmt->fetch() ) {
-                  $row = array('id'=>$count++, 'accountid'=>$accountid, 'username'=>$username, 'email'=>$email,'rolename'=>$rolename, 'question'=>$question, 'answer'=>$answer);
+                  $row = array('id'=>$count++, 'accountid'=>$accountid, 'username'=>$username, 'email'=>$email, 'rolename'=>$rolename, 'question'=>$question, 'answer'=>$answer, 'lastlogin'=>$lastlogin);
                   echo "<tr>
                     <td>". $row['id'] ."</td>
                     <td>". $row['username'] ."</td>
@@ -161,6 +168,7 @@
                     <td>". $row['rolename'] ."</td>
                     <td>". $row['question'] ."</td>
                     <td>". $row['answer'] ."</td>
+                    <td>". $row['lastlogin']."</td>
                   </tr>";
                 }
             echo "</table>
