@@ -64,9 +64,9 @@
             <table>
               <tr>
                 <th>No.</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Team Name</th>
+                <th>Player's First Name</th>
+                <th>Player's Last Name</th>
+                <th>Player's Team Name</th>
               </tr>";
           while( $stmt->fetch() ) {
                 $row = array('id'=>$count++, 'firstname'=>$firstname, 'lastname'=>$lastname,'teamname'=>$teamname);

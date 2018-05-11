@@ -34,8 +34,8 @@
             <tr>
               <th>No.</th>
               <th>Team Name</th>
-              <th>Coach First Name</th>
-              <th>Coach Last Name</th>
+              <th>Coach's First Name</th>
+              <th>Coach's Last Name</th>
               <th>Win Game Count</th>
               <th>Lost Game Count</th>
               <th>Action</th>

@@ -64,8 +64,8 @@
               <table>
                 <tr>
                   <th>No.</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
+                  <th>Coach's First Name</th>
+                  <th>Coach's Last Name</th>
                   <th>Team Name</th>
                 </tr>";
             while( $stmt->fetch() ) {
