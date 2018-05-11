@@ -12,7 +12,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Delete Player Page</title>
+  <title>Delete User Account Page</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -21,32 +21,28 @@
     include 'logged_navbar.php';
     $count = 1;
     $db = configDB($_SESSION["role"]);
-    $query = "SELECT Player.ID, FirstName, LastName, Team.ID, TeamName FROM Player JOIN Team ON TeamID = Team.ID ORDER BY TeamName, LastName";
+    $query = "SELECT ID, Username FROM Account ORDER BY Username";
     if ($stmt = $db->prepare($query)) {
       $stmt->execute();
       $stmt->store_result();
-      $stmt->bind_result($playerID, $firstname, $lastname, $teamid, $teamname);
+      $stmt->bind_result($accountid, $accountname);
     }
     $stmt->data_seek(0);
-    echo "<div class=\"header\" style=\"display:table;\">Delete Player</div>
+    echo "<div class=\"header\" style=\"display:table;\">Delete User Account</div>
           <div class=\"container\">
           <table>
             <tr>
               <th>No.</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Team Name</th>
+              <th>Username</th>
               <th>Action</th>
             </tr>";
             $row = array();
         while( $stmt->fetch() ) {
-            $row = array('id'=>$count++, 'playerid'=>$playerID, 'firstname'=>$firstname, 'lastname'=>$lastname, 'teamname'=>$teamname);
+            $row = array('id'=>$count++, 'accountid'=>$accountid, 'accountname'=>$accountname);
               echo "<tr>
                 <td>". $row['id'] ."</td>
-                <td>". $row['firstname'] ."</td>
-                <td>". $row['lastname'] ."</td>
-                <td>". $row['teamname'] ."</td>
-                <td><a href=\"deleteplayer.php?playerid=".$row['playerid']."\">Delete</a>
+                <td>". $row['accountname'] ."</td>
+                <td><a href=\"deleteuseraccount.php?accountid=".$row['accountid']."\">Delete</a>
               </tr>";
         }
     echo "</table>
@@ -54,14 +50,14 @@
     ?>
 
     <?php
-      if (isset($_GET["playerid"]) && !empty($_GET["playerid"])) {
-        $playerID = $_GET["playerid"];
-        $query = "DELETE FROM Player WHERE ID = ?";
+      if (isset($_GET["accountid"]) && !empty($_GET["accountid"])) {
+        $accountid = $_GET["accountid"];
+        $query = "DELETE FROM Account WHERE ID = ?";
         if ($stmt = $db->prepare($query)) {
-          $stmt->bind_param("i", $playerID);
+          $stmt->bind_param("i", $accountid);
           $stmt->execute();
-          echo '<script type="text/javascript"> alert("You have successfully deleted this player!")</script>';
-          echo "<script>window.location = 'deleteplayer.php';</script>";
+          echo '<script type="text/javascript"> alert("You have successfully deleted this team!")</script>';
+          echo "<script>window.location = 'deleteuseraccount.php';</script>";
         } else {
           echo '<script type="text/javascript"> alert("You do not have this privilege!")</script>';
           echo "<script>window.location = 'dashboard.php';</script>";
