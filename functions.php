@@ -13,23 +13,23 @@ function checkPermission($roleid, $url) {
       case 2: // operator
         // switch 2 = operator
         // check if the url is in buttons_operator?
-        $query = "SELECT * FROM Buttons_operator WHERE Link = ?";
+        $query = "SELECT * FROM Buttons_operator WHERE Link = ? UNION SELECT * FROM Buttons_change WHERE Link = ?" ;
         $stmt = $db->prepare($query);
-        $stmt->bind_param("s", $url);
+        $stmt->bind_param("ss", $url, $url);
       break;
       case 3: // manager
         // switch 3 = manager
         // check if the url is in buttons_operator? and buttons_manager?
-        $query = "SELECT * FROM Buttons_operator WHERE Link = ? UNION SELECT * FROM Buttons_manager WHERE Link = ?";
+        $query = "SELECT * FROM Buttons_operator WHERE Link = ? UNION SELECT * FROM Buttons_manager WHERE Link = ? UNION SELECT * FROM Buttons_change WHERE Link = ?";
         $stmt = $db->prepare($query);
-        $stmt->bind_param("ss", $url, $url);
+        $stmt->bind_param("sss", $url, $url, $url);
       break;
       case 4: // admin
         // switch 4 = admin
         // check if the url is in buttons_operator? and buttons_manager? and buttons_admin
-        $query = "SELECT * FROM Buttons_operator WHERE Link = ? UNION SELECT * FROM Buttons_manager WHERE Link = ? UNION SELECT * FROM Buttons_admin WHERE Link = ?";
+        $query = "SELECT * FROM Buttons_operator WHERE Link = ? UNION SELECT * FROM Buttons_manager WHERE Link = ? UNION SELECT * FROM Buttons_admin WHERE Link = ? UNION SELECT * FROM Buttons_change WHERE Link = ?";
         $stmt = $db->prepare($query);
-        $stmt->bind_param("sss", $url, $url, $url);
+        $stmt->bind_param("ssss", $url, $url, $url, $url);
       break;
       default:
         $query = "SELECT * FROM Buttons_observer WHERE Link = ?";
@@ -45,7 +45,6 @@ function checkPermission($roleid, $url) {
       return false;
     }
 }
-
 
 // Generating random password
 function randPassword(){
@@ -120,10 +119,10 @@ function get_buttons($button_table) {
 }
 
 function get_all_buttons() {
-    $button_observer = get_buttons("buttons_observer");
-    $button_operator = get_buttons("buttons_operator");
-    $button_manager = get_buttons("buttons_manager");
-    $button_admin = get_buttons("buttons_admin");
+    $button_observer = get_buttons("Buttons_observer");
+    $button_operator = get_buttons("Buttons_operator");
+    $button_manager = get_buttons("Buttons_manager");
+    $button_admin = get_buttons("Buttons_admin");
 
     // some of these buttons may be null, make sure it is an array so that we can combine
     $buttons = array();

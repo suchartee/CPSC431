@@ -8,7 +8,11 @@
   require_once "config.php";
   require_once "functions.php";
 
-  if (!checkPermission($_SESSION["role"], basename($_SERVER['PHP_SELF']))) {
+  // only for any changexxxinfo.php or changeuserpassword.php
+  $fullurl = basename($_SERVER['PHP_SELF']);
+  $url = explode("?", $fullurl);
+
+  if (!checkPermission($_SESSION["role"], $url[0])) {
     echo "<script type=\"text/javascript\"> alert(\"You cannot see this page\")</script>";
     echo "<script>window.location = 'dashboard.php';</script>"; // redirect to index.php (login page)
   }
@@ -60,7 +64,7 @@
   <div class="box">
   <form action="changeteaminfo.php" method="post">
   <label>Team Name</label><br/>
-  <input type="text" name="teamname" value="<?php echo $teamname ?>" class="textbox" required/><br/>
+  <input type="text" name="teamname" value="<?php echo $teamname; ?>" class="textbox" required/><br/>
   <label>Team's Coach Name</label><br/>
   <select class="select" name="coachID" required>
     <option value="<?php echo $_SESSION["coachid"]; ?>"><?php echo $coachfirstname . " " . $coachlastname; ?></option>
@@ -72,9 +76,9 @@
           ?>
   </select><br/>
   <label>Win Game Count</label><br/>
-  <input type="number" name="wincount" value="<?php echo $wincount ?>" class="textbox" required/><br/>
+  <input type="number" name="wincount" value="<?php echo $wincount; ?>" class="textbox" required/><br/>
   <label>Lost Game Count</label><br/>
-  <input type="number" name="lostcount" value="<?php echo $lostcount ?>" class="textbox" required/><br/>
+  <input type="number" name="lostcount" value="<?php echo $lostcount; ?>" class="textbox" required/><br/>
   <input type="submit" class="btn_reg" value="Modify Team" name="submit"/>
   </form>
   </div>

@@ -8,7 +8,11 @@
   require_once "config.php";
   require_once "functions.php";
 
-  if (!checkPermission($_SESSION["role"], basename($_SERVER['PHP_SELF']))) {
+  // only for any changexxxinfo.php or changeuserpassword.php
+  $fullurl = basename($_SERVER['PHP_SELF']);
+  $url = explode("?", $fullurl);
+
+  if (!checkPermission($_SESSION["role"], $url[0])) {
     echo "<script type=\"text/javascript\"> alert(\"You cannot see this page\")</script>";
     echo "<script>window.location = 'dashboard.php';</script>"; // redirect to index.php (login page)
   }
@@ -56,12 +60,12 @@
   <div class="box">
   <form action="changeplayerinfo.php" method="post">
   <label>Player's First Name</label><br/>
-  <input type="text" name="firstname" value="<?php echo $firstname ?>" class="textbox" required/><br/>
+  <input type="text" name="firstname" value="<?php echo $firstname; ?>" class="textbox" required/><br/>
   <label>Player's Last Name</label><br/>
-  <input type="text" name="lastname" value="<?php echo $lastname ?>" class="textbox" required/><br/>
+  <input type="text" name="lastname" value="<?php echo $lastname; ?>" class="textbox" required/><br/>
   <label>Player's Team Name</label><br/>
   <select class="select" name="teamID" required>
-    <option value="<?php echo $_SESSION["teamid"]?>"><?php echo $teamname ?></option>
+    <option value="<?php echo $_SESSION["teamid"]; ?>"><?php echo $teamname; ?></option>
           <?php
 					$stmt->data_seek(0);
 					while ($stmt->fetch()){

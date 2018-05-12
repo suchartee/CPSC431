@@ -75,6 +75,7 @@
           $stmt->bind_param("ii", $lastinserted, $teamID);
           $stmt->execute();
           echo '<script type="text/javascript"> alert("New coach is successfully added into the roster!")</script>';
+          echo "<script>window.location = 'coach.php';</script>";
         }
       } else {
         echo '<script type="text/javascript"> alert("You do not have this privilege!")</script>';

@@ -70,6 +70,7 @@
         $stmt->bind_param("ssi", $firstname, $lastname, $teamID);
         $stmt->execute();
         echo '<script type="text/javascript"> alert("New player is successfully added into the roster!")</script>';
+        echo "<script>window.location = 'player.php';</script>";
       } else {
         echo '<script type="text/javascript"> alert("You do not have this privilege!")</script>';
       }

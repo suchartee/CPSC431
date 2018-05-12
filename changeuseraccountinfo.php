@@ -8,7 +8,11 @@
   require_once "config.php";
   require_once "functions.php";
 
-  if (!checkPermission($_SESSION["role"], basename($_SERVER['PHP_SELF']))) {
+  // only for any changexxxinfo.php or changeuserpassword.php
+  $fullurl = basename($_SERVER['PHP_SELF']);
+  $url = explode("?", $fullurl);
+
+  if (!checkPermission($_SESSION["role"], $url[0])) {
     echo "<script type=\"text/javascript\"> alert(\"You cannot see this page\")</script>";
     echo "<script>window.location = 'dashboard.php';</script>"; // redirect to index.php (login page)
   }
@@ -55,9 +59,9 @@
   <div class="box">
   <form action="changeuseraccountinfo.php" method="post">
   <label>Username</label><br/>
-  <input type="text" name="username" value="<?php echo $username ?>" class="textbox" readonly="readonly" required/><br/>
+  <input type="text" name="username" value="<?php echo $username; ?>" class="textbox" readonly="readonly" required/><br/>
   <label>Email</label><br/>
-  <input type="email" name="email" value="<?php echo $email ?>" class="textbox" required/><br/>
+  <input type="email" name="email" value="<?php echo $email; ?>" class="textbox" required/><br/>
   <?php
   // prepare for the <select><option></option></select>
   // role
@@ -70,7 +74,7 @@
    ?>
   <label>Role</label><br/>
   <select class="select" name="roleid" required>
-    <option value="<?php echo $_SESSION["roleid"]?>"><?php echo $rolename ?></option>
+    <option value="<?php echo $_SESSION["roleid"]?>"><?php echo $rolename; ?></option>
           <?php
 					$stmt->data_seek(0);
 					while ($stmt->fetch()){
@@ -90,7 +94,7 @@
    ?>
   <label>Security Question</label><br/>
   <select class="select" name="questionid" required>
-    <option value="<?php echo $_SESSION["questionid"]?>"><?php echo $question ?></option>
+    <option value="<?php echo $_SESSION["questionid"]?>"><?php echo $question; ?></option>
           <?php
 					$stmt->data_seek(0);
 					while ($stmt->fetch()){

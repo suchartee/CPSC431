@@ -51,6 +51,7 @@
         $stmt->bind_param("s", $teamname);
         $stmt->execute();
         echo '<script type="text/javascript"> alert("New Team is successfully added into the roster!")</script>';
+        echo "<script>window.location = 'team.php';</script>";
       } else {
         echo '<script type="text/javascript"> alert("You do not have this privilege!")</script>';
       }

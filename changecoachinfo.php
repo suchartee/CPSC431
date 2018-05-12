@@ -8,7 +8,11 @@
   require_once "config.php";
   require_once "functions.php";
 
-  if (!checkPermission($_SESSION["role"], basename($_SERVER['PHP_SELF']))) {
+  // only for any changexxxinfo.php or changeuserpassword.php
+  $fullurl = basename($_SERVER['PHP_SELF']);
+  $url = explode("?", $fullurl);
+
+  if (!checkPermission($_SESSION["role"], $url[0])) {
     echo "<script type=\"text/javascript\"> alert(\"You cannot see this page\")</script>";
     echo "<script>window.location = 'dashboard.php';</script>"; // redirect to index.php (login page)
   }
