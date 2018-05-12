@@ -55,7 +55,7 @@
     // by default, all team is displayed
     if (empty($_POST["searchbutton"])) {
       $count = 1;
-      $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON CoachID = Coach.ID ORDER BY TeamName";
+      $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team LEFT JOIN Coach ON CoachID = Coach.ID ORDER BY TeamName";
       $db = configDB($_SESSION["role"]);
       if ($stmt = $db->prepare($query)) {
         $stmt->execute();
@@ -93,28 +93,28 @@
         // check what kind of selection is
         switch($_POST["searchbox"]) {
           case "searchByTeamName":
-            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON CoachID = Coach.ID WHERE TeamName LIKE ? ORDER BY TeamName";
+            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team LEFT JOIN Coach ON CoachID = Coach.ID WHERE TeamName LIKE ? ORDER BY TeamName";
           break;
           case "searchByCoachFirstName":
-            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON CoachID = Coach.ID WHERE Coach.FirstName LIKE ? ORDER BY TeamName";
+            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team LEFT JOIN Coach ON CoachID = Coach.ID WHERE Coach.FirstName LIKE ? ORDER BY TeamName";
           break;
           case "searchByCoachLastName":
-            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON CoachID = Coach.ID WHERE Coach.LastName LIKE ? ORDER BY TeamName";
+            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team LEFT JOIN Coach ON CoachID = Coach.ID WHERE Coach.LastName LIKE ? ORDER BY TeamName";
           break;
           case "searchByMostWin":
-            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON Coach.ID = CoachID WHERE WinCount = (SELECT MAX(WinCount) FROM Team)";
+            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team LEFT JOIN Coach ON Coach.ID = CoachID WHERE WinCount = (SELECT MAX(WinCount) FROM Team)";
           break;
           case "searchByLeastWin":
-            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON Coach.ID = CoachID WHERE WinCount = (SELECT MIN(WinCount) FROM Team)";
+            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team LEFT JOIN Coach ON Coach.ID = CoachID WHERE WinCount = (SELECT MIN(WinCount) FROM Team)";
           break;
           case "searchByMostLost":
-            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON Coach.ID = CoachID WHERE lostCount = (SELECT Max(LostCount) FROM Team)";
+            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team LEFT JOIN Coach ON Coach.ID = CoachID WHERE lostCount = (SELECT Max(LostCount) FROM Team)";
           break;
           case "searchByLeastLost":
-            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON Coach.ID = CoachID WHERE lostCount = (SELECT MIN(LostCount) FROM Team)";
+            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team LEFT JOIN Coach ON Coach.ID = CoachID WHERE lostCount = (SELECT MIN(LostCount) FROM Team)";
           break;
           default:
-            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team JOIN Coach ON CoachID = Coach.ID ORDER BY TeamName, Lastname";
+            $query = "SELECT TeamName, WinCount, lostCount, Coach.FirstName, Coach.LastName FROM Team LEFT JOIN Coach ON CoachID = Coach.ID ORDER BY TeamName, Lastname";
           break;
         }
         $count = 1;
