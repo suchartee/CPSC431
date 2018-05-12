@@ -4,6 +4,49 @@
 // Setting the timezone
 date_default_timezone_set('America/Los_Angeles');
 
+function checkPermission($roleid, $url) {
+  require_once "config.php";
+  // connect db
+  $db = configDB($roleid);
+    // get roleid
+    switch ($roleid) {
+      case 2: // operator
+        // switch 2 = operator
+        // check if the url is in buttons_operator?
+        $query = "SELECT * FROM Buttons_operator WHERE Link = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s", $url);
+      break;
+      case 3: // manager
+        // switch 3 = manager
+        // check if the url is in buttons_operator? and buttons_manager?
+        $query = "SELECT * FROM Buttons_operator WHERE Link = ? UNION SELECT * FROM Buttons_manager WHERE Link = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("ss", $url, $url);
+      break;
+      case 4: // admin
+        // switch 4 = admin
+        // check if the url is in buttons_operator? and buttons_manager? and buttons_admin
+        $query = "SELECT * FROM Buttons_operator WHERE Link = ? UNION SELECT * FROM Buttons_manager WHERE Link = ? UNION SELECT * FROM Buttons_admin WHERE Link = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("sss", $url, $url, $url);
+      break;
+      default:
+        $query = "SELECT * FROM Buttons_observer WHERE Link = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s", $url);
+      break;
+    }
+    $stmt->execute();
+    $stmt->store_result();
+    if($stmt->num_rows > 0) {
+      return true;
+    } else {
+      return false;
+    }
+}
+
+
 // Generating random password
 function randPassword(){
   $password_special = '@#$%*-_+';

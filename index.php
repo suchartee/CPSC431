@@ -32,7 +32,6 @@
   <p>Forgot your password? <a href="forgotPassword.php"><u style="color:#f1c40f;">Click Here!</u></a></p>
 
   <?php
-  //echo $_SESSION["username"];
   /*--------------------------------------This is the beginning of Suchartee Kitisopakul's part-----------------------------------------------------*/
   if ((isset($_POST["username"]) && !empty($_POST["username"])) && (isset($_POST["password"]) && (!empty($_POST["password"])))) {
       // sql injection
@@ -94,12 +93,11 @@
                       if ($_SESSION["timeout"] > date("Y-m-d H:i:s")) {
                           // still cannot login
                           echo '<script type="text/javascript"> alert("You still have to wait. Be patient!")</script>';
-                          echo "<script>window.location = 'index.php';</script>";
                       } else {
                             unset($_SESSION["timeout"]);
                             echo '<script type="text/javascript"> alert("Thank you for being patient! Refresh this page and try again!") </script>';
-                            echo "<script>window.location = 'index.php';</script>";
                       }
+                      echo "<script>window.location = 'index.php';</script>";
                   } else {
                       // timeout is not set (Not exceed 3 times yet)
                       // check if the username is existed in the account table, get username and email
@@ -138,15 +136,14 @@
                                   $lastAttemptCheck = date("Y-m-d H:i:s");
                                   $diff = strtotime($lastAttemptCheck) - strtotime($lastAttempt);
 
+                                  $disable = false;
                                   if ($diff > 120) { // if different is > 2 minutes (120 seconds)
                                       // not in 2 mins interval
                                       $attempt = 1;
-                                      $disable = false;
                                   } else {
                                       // within 2 mins interval
                                       if ($attempt < 3) {
                                           $attempt = $attempt + 1;
-                                          $disable = false;
                                       } else {
                                           $disable = true;
                                           // update the last attempt

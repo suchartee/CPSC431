@@ -7,6 +7,11 @@
 
   require_once "config.php";
   require_once "functions.php";
+
+  if (!checkPermission($_SESSION["role"], basename($_SERVER['PHP_SELF']))) {
+    echo "<script type=\"text/javascript\"> alert(\"You cannot see this page\")</script>";
+    echo "<script>window.location = 'dashboard.php';</script>"; // redirect to index.php (login page)
+  }
  ?>
 
 <!DOCTYPE html>
