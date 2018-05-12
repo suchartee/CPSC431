@@ -17,7 +17,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Modify Match Page</title>
+  <title>Delete Match Page</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -39,7 +39,7 @@
       $stmt->store_result();
       $stmt->bind_result($matchid, $hometeam, $awayteam, $homescore, $awayscore, $dateplayed, $winteam, $lostteam);
       $stmt->data_seek(0);
-      echo "<div class=\"header\" style=\"display:table;\">All Matches</div>
+      echo "<div class=\"header\" style=\"display:table;\">Delete Matches</div>
             <div class=\"container\">
             <table>
               <tr>
@@ -64,13 +64,29 @@
                   <td>". $row['awayscore'] ."</td>
                   <td>". $row['winteam'] ."</td>
                   <td>". $row['lostteam'] ."</td>
-                  <td><a href=\"changematchinfo.php?matchid=".$row['matchid']."&hometeam=".$row['hometeam']."&awayteam=".$row['awayteam']."&homescore=".$row['homescore']."&awayscore=".$row['awayscore']."&dateplayed=".$row['dateplayed']."&winteam=".$row['winteam']."&lostteam=".$row['lostteam']."\">Change</a>
-                </tr>";
-          }
+                  <td><a href=\"deletematch.php?matchid=".$row['matchid']."\">Delete</a>
+                </tr>";          }
       echo "</table>
       </div>";
     }
     ?>
+
+    <?php
+      if (isset($_GET["matchid"]) && !empty($_GET["matchid"])) {
+        $matchid = $_GET["matchid"];
+        $query = "DELETE FROM Matches WHERE ID = ?";
+        if ($stmt = $db->prepare($query)) {
+          $stmt->bind_param("i", $matchid);
+          $stmt->execute();
+          echo '<script type="text/javascript"> alert("You have successfully deleted this match!")</script>';
+          echo "<script>window.location = 'deletematch.php';</script>";
+        } else {
+          echo '<script type="text/javascript"> alert("You do not have this privilege!")</script>';
+          echo "<script>window.location = 'dashboard.php';</script>";
+        }
+
+      }
+     ?>
 
 
 </body>

@@ -28,68 +28,32 @@
 <body>
   <?php
     include 'logged_navbar.php';
+    $matchid = $_GET["matchid"];
     $hometeam = $_GET["hometeam"];
     $awayteam = $_GET["awayteam"];
     $winteam = $_GET["winteam"];
     $lostteam = $_GET["lostteam"];
     $db = configDB($_SESSION["role"]);
     // try to find the id of the hometeam and awayteam and winteam and lostteam
-    $query = "SELECT ID FROM Team WHERE TeamName = ?";
+    $query = "SELECT HomeTeamID, AwayTeamID, WinTeamID, LostTeamID FROM Matches WHERE ID = ?";
     if ($stmt = $db->prepare($query)) {
-      $stmt->bind_param("s", $hometeam);
+      $stmt->bind_param("i", $matchid);
       $stmt->execute();
       $stmt->store_result();
-      $stmt->bind_result($hometeamid);
+      $stmt->bind_result($hometeamid, $awayteamid, $winteamid, $lostteamid);
       $stmt->data_seek(0);
       while ($stmt->fetch()) {
         $_SESSION["hometeamid"] = $hometeamid;
-      }
-    } else {
-      echo '<script type="text/javascript"> alert("Error!")</script>';
-      echo "<script>window.location = 'modifymatch.php';</script>";
-    }
-    if ($stmt = $db->prepare($query)) {
-      $stmt->bind_param("s", $awayteam);
-      $stmt->execute();
-      $stmt->store_result();
-      $stmt->bind_result($awayteamid);
-      $stmt->data_seek(0);
-      while ($stmt->fetch()) {
         $_SESSION["awayteamid"] = $awayteamid;
-      }
-    } else {
-      echo '<script type="text/javascript"> alert("Error!")</script>';
-      echo "<script>window.location = 'modifymatch.php';</script>";
-    }
-    if ($stmt = $db->prepare($query)) {
-      $stmt->bind_param("s", $winteam);
-      $stmt->execute();
-      $stmt->store_result();
-      $stmt->bind_result($winteamid);
-      $stmt->data_seek(0);
-      while ($stmt->fetch()) {
         $_SESSION["winteamid"] = $winteamid;
-      }
-    } else {
-      echo '<script type="text/javascript"> alert("Error!")</script>';
-      echo "<script>window.location = 'modifymatch.php';</script>";
-    }
-    if ($stmt = $db->prepare($query)) {
-      $stmt->bind_param("s", $lostteam);
-      $stmt->execute();
-      $stmt->store_result();
-      $stmt->bind_result($lostteamid);
-      $stmt->data_seek(0);
-      while ($stmt->fetch()) {
         $_SESSION["lostteamid"] = $lostteamid;
       }
     } else {
-      echo '<script type="text/javascript"> alert("Error!")</script>';
+      echo '<script type="text/javascript"> alert("Error ha!")</script>';
       echo "<script>window.location = 'modifymatch.php';</script>";
     }
 
     // prepare for the <select><option></option></select>
-    // try to find the id of the hometeam and awayteam
     $query = "SELECT ID, TeamName FROM Team";
     if ($stmt = $db->prepare($query)) {
       $stmt->execute();
@@ -102,6 +66,7 @@
       $_SESSION["dateplayed"] = $_GET["dateplayed"];
       $_SESSION["homescore"] = $_GET["homescore"];
       $_SESSION["awayscore"] = $_GET["awayscore"];
+      $_SESSION["matchid"] = $matchid;
     } else {
       $hometeamid = 0;
       $awayteamid = 0;
@@ -165,12 +130,10 @@
 					}
           ?>
   </select><br/>
-
   <input type="submit" class="btn_reg" value="Modify Match" name="submit"/>
   </form>
   </div>
   </div>
-
 
   <?php
   if (isset($_POST["submit"])) {
@@ -183,46 +146,25 @@
       $awayscoreDB = strip_tags(htmlspecialchars($_POST["awayscore"]));
       $winteamidDB = strip_tags(htmlspecialchars($_POST["winteamid"]));
       $lostteamidDB = strip_tags(htmlspecialchars($_POST["lostteamid"]));
-      if ($hometeamidDB == $_SESSION["hometeamid"]) {
-        $hometeamidDB = $_SESSION["hometeamid"];
-      }
-      if ($awayteamidDB == $_SESSION["awayteamid"]) {
-        $awayteamidDB = $_SESSION["awayteamid"];
-      }
-      if ($winteamidDB == $_SESSION["winteamid"]) {
-        $winteamidDB = $_SESSION["winteamid"];
-      }
-      if ($lostteamidDB == $_SESSION["lostteamid"]) {
-        $lostteamidDB = $_SESSION["lostteamid"];
-      }
-      if ($dateplayedDB == $_SESSION["dateplayed"]) {
-        $dateplayedDB = $_SESSION["dateplayed"];
-      }
-      if ($homescoreDB == $_SESSION["homescore"]) {
-        $homescoreDB = $_SESSION["homescore"];
-      }
-      if ($awayscoreDB == $_SESSION["awayscore"]) {
-        $awayscoreDB = $_SESSION["awayscore"];
-      }
 
       $query = "UPDATE Matches
               SET HomeTeamID = ?, AwayTeamID = ?, HomeScore = ?,
                   AwayScore = ?, DatePlayed = ?, WinTeamID = ?,
                   LostTeamID = ?
-              WHERE ID =
-                (SELECT * FROM
-                  (SELECT ID FROM Matches
-                    WHERE HomeTeamID = ? AND AwayTeamID = ?
-                      AND HomeScore = ? AND AwayScore = ?
-                      AND DatePlayed = ? AND WinTeamID = ?
-                      AND LostTeamID = ?)
-                    AS Innertable)";
+              WHERE ID = ?";
       if ($stmt = $db->prepare($query)) {
-        $stmt->bind_param("iiiisiiiiiisii",
-        $hometeamidDB, $awayteamidDB, $homescoreDB, $awayscoreDB, $dateplayedDB, $winteamidDB, $lostteamidDB,
-        $_SESSION["hometeamid"], $_SESSION["awayteamid"], $_SESSION["homescore"], $_SESSION["awayscore"], $_SESSION["dateplayed"], $_SESSION["winteamid"], $_SESSION["lostteamid"]
-        );
+        $stmt->bind_param("iiiisiii",
+        $hometeamidDB, $awayteamidDB, $homescoreDB, $awayscoreDB, $dateplayedDB, $winteamidDB, $lostteamidDB, $_SESSION["matchid"]);
         $stmt->execute();
+
+        unset($_SESSION["hometeamid"]);
+        unset($_SESSION["awayteamid"]);
+        unset($_SESSION["winteamid"]);
+        unset($_SESSION["lostteamid"]);
+        unset($_SESSION["dateplayed"]);
+        unset($_SESSION["homescore"]);
+        unset($_SESSION["awayscore"]);
+        unset($_SESSION["matchid"]);
         echo '<script type="text/javascript"> alert("You have successfully changed match\'s information!")</script>';
         echo "<script>window.location = 'modifymatch.php';</script>";
       } else {
@@ -232,6 +174,7 @@
     }
   }
   ?>
+
 
 </body>
 </html>

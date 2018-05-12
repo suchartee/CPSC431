@@ -95,9 +95,6 @@
       $coachidDB = strip_tags(htmlspecialchars($_POST["coachID"]));
       $coachid = $_SESSION["coachid"];
       $teamidDB = $_SESSION["teamid"];
-      if ($coachidDB == $coachid) { // in case the coach is the same
-        $coachidDB = $_SESSION["coachid"];
-      }
       $wincountDB = strip_tags(htmlspecialchars($_POST["wincount"]));
       $lostcountDB = strip_tags(htmlspecialchars($_POST["lostcount"]));
 

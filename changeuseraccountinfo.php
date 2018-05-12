@@ -118,26 +118,13 @@
       $usernameDB = trim(strtolower(strip_tags(htmlspecialchars($_POST["username"]))));
       $emailDB = strtolower(strip_tags(htmlspecialchars(strtolower($_POST["email"]))));
       $roleidDB = $_POST["roleid"];
-      if ($roleidDB == $_SESSION["roleid"]) {
-        $roleidDB =$_SESSION["roleid"];
-      }
       $questionidDB = $_POST["questionid"];
-      if ($questionidDB == $_SESSION["questionid"]) {
-        $questionidDB = $_SESSION["questionid"];
-      }
       $answerDB = trim(strip_tags(htmlspecialchars(strtolower($_POST["answer"]))));
       $accountidDB = $_SESSION["accountid"];
 
       unset($_SESSION["accountid"]);
       unset($_SESSION["roleid"]);
       unset($_SESSION["questionid"]);
-
-      /*echo $usernameDB;
-      echo $emailDB;
-      echo $roleidDB;
-      echo $questionidDB;
-      echo $answerDB;
-      echo $accountidDB;*/
 
       $query = "UPDATE Account SET Username = ?, Email = ?, RoleID = ?, QuestionNum = ?, Answer = ? WHERE ID = ?";
       if ($stmt = $db->prepare($query)) {

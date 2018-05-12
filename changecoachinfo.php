@@ -87,9 +87,6 @@
       $lastnameDB = ucwords(strip_tags(htmlspecialchars($_POST["lastname"])));
       $teamidDB = strip_tags(htmlspecialchars($_POST["teamID"]));
       $coachid = $_SESSION["coachid"];
-      if ($teamidDB == $_SESSION["teamid"]) {
-        $teamidDB = $_SESSION["teamid"];
-      }
 
       unset($_SESSION["playerid"]);
       unset($_SESSION["teamid"]);
