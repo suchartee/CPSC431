@@ -87,7 +87,8 @@
                   <th>Rebound(s)</th>
                 </tr>";
             while( $stmt->fetch() ) {
-                  $row = array('id'=>$count++, 'pid'=>$pid, 'firstname'=>$firstname,'lastname'=>$lastname, 'timemin'=>$timemin, 'timesec'=>$timesec, 'point'=>$point, 'assist'=>$assist, 'rebound'=>$rebound);
+                  $row = array('id'=>$count++, 'pid'=>$pid, 'firstname'=>$firstname,'lastname'=>$lastname,
+                  'timemin'=>$timemin, 'timesec'=>$timesec, 'point'=>$point, 'assist'=>$assist, 'rebound'=>$rebound);
                   echo "<tr>
                     <td>". $row['id'] ."</td>
                     <td>". $row['firstname'] ."</td>
@@ -132,7 +133,7 @@
           if ($stmt = $db->prepare($query)) {
             // check SQL injection for textbox, if any
             if (isset($_POST["playerid"]) && !empty($_POST["playerid"])) {
-              $searchtextbox = strip_tags(htmlspecialchars($_POST["playerid"]));
+              $searchtextbox = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["playerid"]))));
               $stmt->bind_param("i", $searchtextbox);
             }
             $stmt->execute();
@@ -152,7 +153,8 @@
                       <th>Rebound(s)</th>
                     </tr>";
                 while( $stmt->fetch() ) {
-                    $row = array('id'=>$count++, 'pid'=>$pid, 'firstname'=>$firstname,'lastname'=>$lastname, 'timemin'=>$timemin, 'timesec'=>$timesec, 'point'=>$point, 'assist'=>$assist, 'rebound'=>$rebound);
+                    $row = array('id'=>$count++, 'pid'=>$pid, 'firstname'=>$firstname,'lastname'=>$lastname,
+                    'timemin'=>$timemin, 'timesec'=>$timesec, 'point'=>$point, 'assist'=>$assist, 'rebound'=>$rebound);
                     echo "<tr>
                     <td>". $row['id'] ."</td>
                     <td>". $row['firstname'] ."</td>

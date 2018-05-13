@@ -82,11 +82,12 @@
   <?php
   if (isset($_POST["submit"])) {
     // check SQL injection
-    if (!empty($_POST["firstname"]) && !empty($_POST["lastname"]) && !empty($_POST["teamID"])) {
-      $firstnameDB = ucwords(strip_tags(htmlspecialchars($_POST["firstname"])));
-      $lastnameDB = ucwords(strip_tags(htmlspecialchars($_POST["lastname"])));
-      $teamidDB = strip_tags(htmlspecialchars($_POST["teamID"]));
-      $coachid = $_SESSION["coachid"];
+    if (isset($_POST["firstname"]) && !empty($_POST["firstname"]) && isset($_POST["lastname"]) &&
+    !empty($_POST["lastname"]) && isset($_POST["teamID"]) && !empty($_POST["teamID"])) {
+      $firstnameDB = ucwords(trim(strip_tags(htmlspecialchars(htmlentities($_POST["firstname"])))));
+      $lastnameDB = ucwords(trim(strip_tags(htmlspecialchars(htmlentities($_POST["lastname"])))));
+      $teamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["teamID"]))));
+      $coachid = (int)trim(strip_tags(htmlspecialchars(htmlentities($_SESSION["coachid"]))));
 
       unset($_SESSION["playerid"]);
       unset($_SESSION["teamid"]);

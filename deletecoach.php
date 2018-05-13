@@ -60,7 +60,7 @@
 
     <?php
       if (isset($_GET["coachid"]) && !empty($_GET["coachid"])) {
-        $coachid = $_GET["coachid"];
+        $coachid = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["coachid"]))));
         $query = "DELETE FROM Coach WHERE ID = ?";
         if ($stmt = $db->prepare($query)) {
           $stmt->bind_param("i", $coachid);

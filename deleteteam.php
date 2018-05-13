@@ -56,7 +56,7 @@
 
     <?php
       if (isset($_GET["teamid"]) && !empty($_GET["teamid"])) {
-        $teamID = $_GET["teamid"];
+        $teamID = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["teamid"]))));
         $query = "DELETE FROM Team WHERE ID = ?";
         if ($stmt = $db->prepare($query)) {
           $stmt->bind_param("i", $teamID);

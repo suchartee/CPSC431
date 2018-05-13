@@ -26,7 +26,9 @@
     include 'logged_navbar.php';
     $count = 1;
     $db = configDB($_SESSION["role"]);
-    $query = "SELECT Account.ID, Username, Email, RoleID, Role.RoleName, QuestionNum, Question.Question, Answer FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID ORDER BY RoleName, Username";
+    $query = "SELECT Account.ID, Username, Email, RoleID, Role.RoleName, QuestionNum, Question.Question, Answer
+              FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID
+              ORDER BY RoleName, Username";
     if ($stmt = $db->prepare($query)) {
       $stmt->execute();
       $stmt->store_result();
@@ -47,7 +49,8 @@
             </tr>";
 
         while( $stmt->fetch() ) {
-          $row = array('id'=>$count++, 'accountid'=>$accountid, 'username'=>$username, 'email'=>$email, 'roleid'=>$roleid, 'rolename'=>$rolename, 'questionid'=>$questionid, 'question'=>$question, 'answer'=>$answer);
+          $row = array('id'=>$count++, 'accountid'=>$accountid, 'username'=>$username, 'email'=>$email,
+          'roleid'=>$roleid, 'rolename'=>$rolename, 'questionid'=>$questionid, 'question'=>$question, 'answer'=>$answer);
           echo "<tr>
             <td>". $row['id'] ."</td>
             <td>". $row['username'] ."</td>
@@ -55,7 +58,10 @@
             <td>". $row['rolename'] ."</td>
             <td>". $row['question'] ."</td>
             <td>". $row['answer'] ."</td>
-            <td><a href=\"changeuseraccountinfo.php?accountid=".$row['accountid']."&username=".$row['username']."&email=".$row['email']."&roleid=".$row['roleid']."&rolename=".$row['rolename']."&questionid=".$row['questionid']."&question=".$row['question']."&answer=".$row['answer']."\">Change</a>
+            <td><a href=\"changeuseraccountinfo.php?accountid=".$row['accountid']."&username="
+            .$row['username']."&email=".$row['email']."&roleid=".$row['roleid']."&rolename="
+            .$row['rolename']."&questionid=".$row['questionid']."&question=".$row['question']."&answer="
+            .$row['answer']."\">Change</a>
           </tr>";
         }
     echo "</table>

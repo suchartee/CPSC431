@@ -38,14 +38,16 @@
     }
 
     // retrieve info from previous page (user's choice)
-    if (isset($_GET["teamid"]) && isset($_GET["teamname"]) && isset($_GET["coachid"]) && isset($_GET["coachfirstname"]) && isset($_GET["coachlastname"])) {
-      $_SESSION["teamid"] = $_GET["teamid"];
-      $teamname = $_GET["teamname"];
-      $_SESSION["coachid"] = $_GET["coachid"];
-      $coachfirstname = $_GET["coachfirstname"];
-      $coachlastname = $_GET["coachlastname"];
-      $wincount = $_GET["wincount"];
-      $lostcount = $_GET["lostcount"];
+    if (isset($_GET["teamid"]) && !empty($_GET["teamid"]) && isset($_GET["teamname"]) && !empty(isset($_GET["teamname"])) &&
+    isset($_GET["coachid"]) && !empty($_GET["coachid"]) && isset($_GET["coachfirstname"]) && !empty($_GET["coachfirstname"]) &&
+    isset($_GET["coachlastname"]) && !empty($_GET["coachlastname"])) {
+      $_SESSION["teamid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["teamid"]))));
+      $teamname = trim(strip_tags(htmlspecialchars(htmlentities($_GET["teamname"]))));
+      $_SESSION["coachid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["coachid"]))));
+      $coachfirstname = trim(strip_tags(htmlspecialchars(htmlentities($_GET["coachfirstname"]))));
+      $coachlastname = trim(strip_tags(htmlspecialchars(htmlentities($_GET["coachlastname"]))));
+      $wincount = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["wincount"]))));
+      $lostcount = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["lostcount"]))));
     } else {
       $teamid = 0;
       $teamname = "";
@@ -91,12 +93,12 @@
     if (!empty($_POST["teamname"]) && !empty($_POST["coachID"])) {
       // sql injection
       // prepare info for update the table
-      $teamnameDB = ucwords(strip_tags(htmlspecialchars($_POST["teamname"])));
-      $coachidDB = strip_tags(htmlspecialchars($_POST["coachID"]));
+      $teamnameDB = ucwords(trim(strip_tags(htmlspecialchars(htmlentities($_POST["teamname"])))));
+      $coachidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["coachID"]))));
       $coachid = $_SESSION["coachid"];
       $teamidDB = $_SESSION["teamid"];
-      $wincountDB = strip_tags(htmlspecialchars($_POST["wincount"]));
-      $lostcountDB = strip_tags(htmlspecialchars($_POST["lostcount"]));
+      $wincountDB = (int)trim(strip_tags(htmlspecialchars(htmlentities(($_POST["wincount"])))));
+      $lostcountDB = (int)trim(strip_tags(htmlspecialchars(htmlentities(($_POST["lostcount"])))));
 
       unset($_SESSION["coachid"]);
       unset($_SESSION["teamid"]);

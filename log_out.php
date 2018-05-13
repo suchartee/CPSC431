@@ -24,7 +24,7 @@
     Logged out
   </div>
   <div class="container">
-    <h2>You are now successfully logged out of Basketball Roster Project.</h2>
+    <h2>You are now successfully logged out of Basketball Roster.</h2>
     Didn't mean to logout? <a href="index.php">Login again</a>
   </div>
 

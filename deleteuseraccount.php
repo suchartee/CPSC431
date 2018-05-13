@@ -56,7 +56,7 @@
 
     <?php
       if (isset($_GET["accountid"]) && !empty($_GET["accountid"])) {
-        $accountid = $_GET["accountid"];
+        $accountid = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["accountid"]))));
         $query = "DELETE FROM Account WHERE ID = ?";
         if ($stmt = $db->prepare($query)) {
           $stmt->bind_param("i", $accountid);

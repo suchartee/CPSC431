@@ -64,7 +64,7 @@
     // retrieve info from previous page (user's choice)
     if (isset($_GET["homescore"]) && isset($_GET["awayscore"]) && isset($_GET["dateplayed"])) {
       $_SESSION["dateplayed"] = $_GET["dateplayed"];
-      $_SESSION["homescore"] = $_GET["homescore"];
+      $_SESSION["homescore"] = $_GET["hofmescore"];
       $_SESSION["awayscore"] = $_GET["awayscore"];
       $_SESSION["matchid"] = $matchid;
     } else {
@@ -138,14 +138,17 @@
   <?php
   if (isset($_POST["submit"])) {
     // check SQL injection
-    if (!empty($_POST["hometeamid"]) && !empty($_POST["awayteamid"]) && !empty($_POST["homescore"]) && !empty($_POST["awayscore"]) && !empty($_POST["datepicker"]) && !empty($_POST["winteamid"]) && !empty($_POST["lostteamid"])) {
-      $hometeamidDB = strip_tags(htmlspecialchars($_POST["hometeamid"]));
-      $awayteamidDB = strip_tags(htmlspecialchars($_POST["awayteamid"]));
-      $dateplayedDB = strip_tags(htmlspecialchars($_POST["datepicker"]));
-      $homescoreDB = strip_tags(htmlspecialchars($_POST["homescore"]));
-      $awayscoreDB = strip_tags(htmlspecialchars($_POST["awayscore"]));
-      $winteamidDB = strip_tags(htmlspecialchars($_POST["winteamid"]));
-      $lostteamidDB = strip_tags(htmlspecialchars($_POST["lostteamid"]));
+    if (isset($_POST["hometeamid"]) && !empty($_POST["hometeamid"]) && isset($_POST["awayteamid"]) && !empty($_POST["awayteamid"]) &&
+    isset($_POST["homescore"]) && !empty($_POST["homescore"]) && isset($_POST["awayscore"]) && !empty($_POST["awayscore"]) &&
+    isset($_POST["datepicker"]) && !empty($_POST["datepicker"]) && isset($_POST["winteamid"]) && !empty($_POST["winteamid"]) &&
+    isset($_POST["lostteamid"]) && !empty($_POST["lostteamid"])) {
+      $hometeamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["hometeamid"]))));
+      $awayteamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["awayteamid"]))));
+      $dateplayedDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["datepicker"]))));
+      $homescoreDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["homescore"]));))
+      $awayscoreDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["awayscore"]));))
+      $winteamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["winteamid"]));))
+      $lostteamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["lostteamid"]))));
 
       $query = "UPDATE Matches
               SET HomeTeamID = ?, AwayTeamID = ?, HomeScore = ?,

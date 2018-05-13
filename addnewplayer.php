@@ -60,10 +60,11 @@
   <?php
   if (isset($_POST["submit"])) {
     // check SQL injection
-    if (isset($_POST["firstname"]) && !empty($_POST["firstname"]) && isset($_POST["lastname"]) && !empty($_POST["lastname"]) && isset($_POST["teamID"]) && !empty($_POST["teamID"])) {
-      $firstname = ucwords(strip_tags(htmlspecialchars($_POST["firstname"])));
-      $lastname = ucwords(strip_tags(htmlspecialchars($_POST["lastname"])));
-      $teamID = strip_tags(htmlspecialchars($_POST["teamID"]));
+    if (isset($_POST["firstname"]) && !empty($_POST["firstname"]) && isset($_POST["lastname"]) && !empty($_POST["lastname"]) &&
+    isset($_POST["teamID"]) && !empty($_POST["teamID"])) {
+      $firstname = ucwords(trim(strip_tags(htmlspecialchars(htmlentities($_POST["firstname"])))));
+      $lastname = ucwords(trim(strip_tags(htmlspecialchars(htmlentities($_POST["lastname"])))));
+      $teamID = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["teamID"]))));
 
       $query = "INSERT INTO Player (FirstName, LastName, TeamID) VALUES (?, ?, ?)";
       if ($stmt = $db->prepare($query)) {

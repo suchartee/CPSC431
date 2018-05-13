@@ -38,12 +38,13 @@
     }
 
     // retrieve info from previous page (user's choice)
-    if (isset($_GET["firstname"]) && isset($_GET["lastname"]) && isset($_GET["teamid"]) && isset($_GET["teamname"])) {
-      $_SESSION["playerid"] = $_GET["playerid"];
-      $firstname = $_GET["firstname"];
-      $lastname = $_GET["lastname"];
-      $_SESSION["teamid"] = $_GET["teamid"];
-      $teamname = $_GET["teamname"];
+    if (isset($_GET["firstname"]) !empty($_GET["firstname"]) && isset($_GET["lastname"]) && !empty($_GET["lastname"]) &&
+    isset($_GET["teamid"]) && !empty($_GET["teamid"]) && isset($_GET["teamname"]) && !empty($_GET["teamname"])) {
+      $_SESSION["playerid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["playerid"]))));
+      $firstname = trim(strip_tags(htmlspecialchars(htmlentities($_GET["firstname"]))));
+      $lastname = trim(strip_tags(htmlspecialchars(htmlentities($_GET["lastname"]))));
+      $_SESSION["teamid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["teamid"]))));
+      $teamname = trim(strip_tags(htmlspecialchars(htmlentities($_GET["teamname"]))));
     } else {
       $playerid = 0;
       $firstname = "";
@@ -82,11 +83,12 @@
   <?php
   if (isset($_POST["submit"])) {
     // check SQL injection
-    if (!empty($_POST["firstname"]) && !empty($_POST["lastname"]) && !empty($_POST["teamID"])) {
-      $firstnameDB = ucwords(strip_tags(htmlspecialchars($_POST["firstname"])));
-      $lastnameDB = ucwords(strip_tags(htmlspecialchars($_POST["lastname"])));
-      $teamidDB = strip_tags(htmlspecialchars($_POST["teamID"]));
-      $playerid = $_SESSION["playerid"];
+    if (isset($_POST["firstname"]) && !empty($_POST["firstname"]) && isset($_POST["lastname"]) && !empty($_POST["lastname"])
+    && isset($_POST["teamID"]) && !empty($_POST["teamID"])) {
+      $firstnameDB = ucwords(trim(strip_tags(htmlspecialchars(htmlentities($_POST["firstname"])))));
+      $lastnameDB = ucwords(trim(strip_tags(htmlspecialchars(htmlentities($_POST["lastname"])))));
+      $teamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["teamID"]))));
+      $playerid = (int)trim(strip_tags(htmlspecialchars(htmlentities($_SESSION["playerid"]))));
 
       unset($_SESSION["playerid"]);
       unset($_SESSION["teamid"]);

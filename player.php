@@ -102,7 +102,7 @@
         if ($stmt = $db->prepare($query)) {
           // check SQL injection for textbox, if any
           if (isset($_POST["textbox"]) && !empty($_POST["textbox"])) {
-            $searchtextbox = lcfirst(strip_tags(htmlspecialchars($_POST["textbox"]))) . "%"; // First letter uppercase and search anything that starts with the value in textbox
+            $searchtextbox = lcfirst(trim(strip_tags(htmlspecialchars(htmlentities($_POST["textbox"]))))) . "%"; // First letter uppercase and search anything that starts with the value in textbox
             $stmt->bind_param("s", $searchtextbox);
           }
           $stmt->execute();

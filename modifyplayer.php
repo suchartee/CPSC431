@@ -26,7 +26,8 @@
     include 'logged_navbar.php';
     $count = 1;
     $db = configDB($_SESSION["role"]);
-    $query = "SELECT Player.ID, FirstName, LastName, Team.ID, TeamName FROM Player JOIN Team ON TeamID = Team.ID ORDER BY TeamName, LastName";
+    $query = "SELECT Player.ID, FirstName, LastName, Team.ID, TeamName FROM Player
+              JOIN Team ON TeamID = Team.ID ORDER BY TeamName, LastName";
     if ($stmt = $db->prepare($query)) {
       $stmt->execute();
       $stmt->store_result();
@@ -45,14 +46,16 @@
             </tr>";
 
         while( $stmt->fetch() ) {
-          $row = array('id'=>$count++, 'playerid'=>$playerID, 'firstname'=>$firstname, 'lastname'=>$lastname, 'teamid'=>$teamid,'teamname'=>$teamname);
+          $row = array('id'=>$count++, 'playerid'=>$playerID, 'firstname'=>$firstname, 'lastname'=>$lastname,
+          'teamid'=>$teamid,'teamname'=>$teamname);
           echo "<tr>
 
             <td>". $row['id'] ."</td>
             <td>". $row['firstname'] ."</td>
             <td>". $row['lastname'] ."</td>
             <td>". $row['teamname'] ."</td>
-            <td><a href=\"changeplayerinfo.php?playerid=".$row['playerid']."&firstname=".$row['firstname']."&lastname=".$row['lastname']."&teamid=".$row['teamid']."&teamname=".$row['teamname']."\">Change</a>
+            <td><a href=\"changeplayerinfo.php?playerid=".$row['playerid']."&firstname=".$row['firstname']."&lastname="
+            .$row['lastname']."&teamid=".$row['teamid']."&teamname=".$row['teamname']."\">Change</a>
           </tr>";
         }
     echo "</table>

@@ -29,14 +29,14 @@
     </div>
   </form>
 
-  <p>Forgot your password? <a href="forgotPassword.php"><u style="color:#f1c40f;">Click Here!</u></a></p>
+  <p>Forgot your password? <a href="forgotpassword.php"><u style="color:#f1c40f;">Click Here!</u></a></p>
 
   <?php
   /*--------------------------------------This is the beginning of Suchartee Kitisopakul's part-----------------------------------------------------*/
   if ((isset($_POST["username"]) && !empty($_POST["username"])) && (isset($_POST["password"]) && (!empty($_POST["password"])))) {
       // sql injection
-      $username = strtolower(strip_tags(htmlspecialchars($_POST["username"])));
-      $password = strip_tags(htmlspecialchars($_POST['password']));
+      $username = strtolower(trim(strip_tags(htmlspecialchars(htmlentities($_POST["username"])))));
+      $password = strip_tags(trim(htmlspecialchars(htmlentities($_POST['password']))));
 
       // DONT FORGET TO HASH PASSWORD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       $db = configDB(5);
@@ -181,7 +181,8 @@
                                   } else {
                                       // exceed the invalid attempt
                                       // check if email or username is in $_SESSION
-                                      if (isset($_SESSION["username"]) && !empty($_SESSION["username"]) && isset($_SESSION["email"]) && !empty($_SESSION["email"])) {
+                                      if (isset($_SESSION["username"]) && !empty($_SESSION["username"]) &&
+                                      isset($_SESSION["email"]) && !empty($_SESSION["email"])) {
                                           // prepare for generating new password
                                           $password = randPassword();
 
@@ -210,7 +211,10 @@
                                               mail($email, $subject, $message, $header);
                                               // set timeout for checking
                                               $_SESSION["timeout"] = $nextAttempt;
-                                              echo "<script type=\"text/javascript\"> alert(\"You have exceed the number of allowed login attempts\\nPlease try again later\\nYour next login time will be ". $nextAttemptFormat . "\")</script>";
+                                              echo "<script type=\"text/javascript\">
+                                              alert(\"You have exceed the number of allowed login attempts
+                                              \\nPlease try again later
+                                              \\nYour next login time will be ". $nextAttemptFormat . "\")</script>";
                                           } else {
                                               // prepare statement error
                                               echo '<script type="text/javascript"> alert("Error!")</script>';
@@ -219,7 +223,10 @@
                                       } else {
                                           // for those whose account is not in account table = no email for sending
                                           $_SESSION["timeout"] = $nextAttempt;
-                                          echo "<script type=\"text/javascript\"> alert(\"You have exceed the number of allowed login attempts\\nPlease try again later\\nYour next login time will be: ". $nextAttemptFormat ."\")</script>";
+                                          echo "<script type=\"text/javascript\">
+                                          alert(\"You have exceed the number of allowed login attempts
+                                          \\nPlease try again later
+                                          \\nYour next login time will be: ". $nextAttemptFormat ."\")</script>";
                                       }
                                   }
                               } else {
@@ -230,7 +237,9 @@
                                   if ($stmt = $db->prepare($query)) {
                                       $stmt->bind_param("sis", $username, $attempt, $lastAttempt);
                                       $stmt->execute();
-                                      echo "<script type=\"text/javascript\"> alert(\"Wrong username or password! Please try again\\nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
+                                      echo "<script type=\"text/javascript\">
+                                      alert(\"Wrong username or password! Please try again
+                                      \\nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
                                   } else {
                                       // prepare statement error
                                       echo '<script type="text/javascript"> alert("Error!")</script>';

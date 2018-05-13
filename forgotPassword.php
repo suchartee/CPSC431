@@ -18,7 +18,7 @@
   </ul>
 
 
-  <form method="post" action="forgotPassword.php">
+  <form method="post" action="forgotpassword.php">
     <div class="box">
       <h1>Forgot Your Password</h1>
       <input type="text" name="username" placeholder="Please Enter Your Username" class="textbox" required/><br/>
@@ -29,16 +29,16 @@
 
   <?php
   if(isset($_POST['username']) && !empty($_POST['username'])) {
-      $username = strtolower(strip_tags(htmlspecialchars($_POST['username'])));
+      $username = strtolower(trim(strip_tags(htmlspecialchars(htmlentities($_POST['username'])))));
       if ($username == 'admin') {
         // admin cannot forget passwords
         echo '<script type="text/javascript"> alert("You are tricky! Do not do this again.") </script>';
       } else {
         $db = configDB(5);
 
-        $query = "SELECT Question.Question, Account.Answer, Account.Email FROM Account JOIN Question ON Account.QuestionNum = Question.ID AND Account.Username = ?";
+        $query = "SELECT Question.Question, Account.Answer, Account.Email FROM Account
+        JOIN Question ON Account.QuestionNum = Question.ID AND Account.Username = ?";
         if ($stmt = $db->prepare($query)) {
-
           $stmt->bind_param("s", $username);
       	  $stmt->execute();
       	  $stmt->store_result();
@@ -52,7 +52,7 @@
               $_SESSION["answer"] = $answer;
               $_SESSION["email"] = $email;
     				}
-            echo "<script>window.location = 'securityQuestion.php';</script>";
+            echo "<script>window.location = 'securityquestion.php';</script>";
           } else {
             // That username does not exist
             echo '<script type="text/javascript"> alert("The username does not exist!") </script>';

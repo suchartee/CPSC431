@@ -37,23 +37,18 @@
       </h2>
       <h3 style="text-align:left; padding-left: 20%;">
       <?php
-      switch($_SESSION["role"]) {
-          case 1:
-            echo "Observer";
-          break;
-          case 2:
-            echo "Operator";
-          break;
-          case 3:
-            echo "Manager";
-          break;
-          case 4:
-            echo "Admin";
-          break;
-          default:
-          echo "Account Authorized Person";
-          break;
-      }
+      $db = configDB($_SESSION["role"]);
+      $query = "SELECT RoleName FROM Role WHERE ID = ?";
+      if ($stmt = $db->prepare()) {
+        $stmt->bind_param("i", $_SESSION["role"]);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($rolename);
+        $stmt->data_seek(0);
+        while ($stmt->fetch()) {
+          echo $rolename;
+        }
+      }      
       ?>
       </h3>
       <h2 style="text-align:left; padding-left: 10%; color:#594F4F;">

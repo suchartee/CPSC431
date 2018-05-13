@@ -63,8 +63,8 @@
   					}
             ?>
     </select><br/>
-  <input type="number" name="hometeamscore" placeholder="Home Team Score" pattern="[0-9]*" class="textbox" required/><br/>
-  <input type="number" name="awayteamscore" placeholder="Away Team Score" pattern="[0-9]*" class="textbox" required/><br/>
+  <input type="number" name="hometeamscore" placeholder="Home Team Score" min="0" class="textbox" required/><br/>
+  <input type="number" name="awayteamscore" placeholder="Away Team Score" min="0" class="textbox" required/><br/>
   <select class="select" name="winteamid" required>
     <option value="" disabled selected hidden>Win Team Name</option>
           <?php
@@ -92,18 +92,17 @@
   <?php
   if (isset($_POST["submit"])) {
     // check SQL injection
-    if (isset($_POST["hometeamid"]) && !empty($_POST["hometeamid"]) && isset($_POST["awayteamid"])
-    && !empty($_POST["awayteamid"]) && isset($_POST["hometeamscore"]) && !empty($_POST["hometeamscore"])
-    && isset($_POST["awayteamscore"]) && !empty($_POST["awayteamscore"])
-    && isset($_POST["winteamid"]) && !empty($_POST["winteamid"]) && isset($_POST["lostteamid"]) && !empty($_POST["lostteamid"])
-    && isset($_POST["datepicker"]) && !empty($_POST["datepicker"])) {
+    if (isset($_POST["hometeamid"]) && !empty($_POST["hometeamid"]) && isset($_POST["awayteamid"]) && !empty($_POST["awayteamid"]) &&
+    isset($_POST["hometeamscore"]) && !empty($_POST["hometeamscore"]) && isset($_POST["awayteamscore"]) && !empty($_POST["awayteamscore"]) &&
+    isset($_POST["winteamid"]) && !empty($_POST["winteamid"]) && isset($_POST["lostteamid"]) && !empty($_POST["lostteamid"]) &&
+    isset($_POST["datepicker"]) && !empty($_POST["datepicker"])) {
       $dateplayed = $_POST["datepicker"];
-      $hometeam = strip_tags(htmlspecialchars($_POST["hometeamid"]));
-      $awayteam = strip_tags(htmlspecialchars($_POST["awayteamid"]));
-      $hometeamscore = strip_tags(htmlspecialchars($_POST["hometeamscore"]));
-      $awayteamscore = strip_tags(htmlspecialchars($_POST["awayteamscore"]));
-      $winteam = strip_tags(htmlspecialchars($_POST["winteamid"]));
-      $lostteam = strip_tags(htmlspecialchars($_POST["lostteamid"]));
+      $hometeam = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["hometeamid"]))));
+      $awayteam = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["awayteamid"]))));
+      $hometeamscore = (int)strip_tags(htmlspecialchars($_POST["hometeamscore"]));
+      $awayteamscore = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["awayteamscore"]))));
+      $winteam = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["winteamid"]))));
+      $lostteam = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["lostteamid"]))));
 
       $query = "INSERT INTO Matches (HomeTeamID, AwayTeamID, HomeScore, AwayScore, DatePlayed, WinTeamID, LostTeamID) VALUES (?, ?, ?, ?, ?, ?, ?)";
       if ($stmt = $db->prepare($query)) {

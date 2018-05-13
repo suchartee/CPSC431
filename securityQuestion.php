@@ -22,7 +22,7 @@
   </ul>
 
 
-  <form method="post" action="securityQuestion.php">
+  <form method="post" action="securityquestion.php">
     <div class="box">
       <h1>Security Question</h1>
       <?php echo $_SESSION["question"]; ?>
@@ -34,7 +34,7 @@
 
   <?php
     if(isset($_POST['answer']) && !empty($_POST['answer'])) {
-        $answer = strip_tags(htmlspecialchars($_POST['answer']));
+        $answer = trim(strip_tags(htmlspecialchars(htmlentities($_POST['answer']))));
         // ---- hash Answer
         if ($answer == $_SESSION["answer"]) {
           // prepare for generating new password
@@ -70,7 +70,6 @@
 
             // send Email
             mail($email, $subject, $message);
-
 
             session_destroy(); // destroy the $_SESSION["question"] and $_SESSION["answer"] and $_SESSION["email"] and $_SESSION["database"];;
             echo '<script type="text/javascript"> alert("Email is sent! Please check your email") </script>';

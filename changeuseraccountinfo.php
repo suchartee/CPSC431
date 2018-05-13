@@ -31,15 +31,18 @@
     $db = configDB($_SESSION["role"]);
 
     // retrieve info from previous page (user's choice)
-    if (isset($_GET["accountid"]) && isset($_GET["username"]) && isset($_GET["email"]) && isset($_GET["roleid"]) && isset($_GET["rolename"]) && isset($_GET["questionid"]) && isset($_GET["question"]) && isset($_GET["answer"])) {
-      $_SESSION["accountid"] = $_GET["accountid"];
-      $username = $_GET["username"];
-      $email = $_GET["email"];
-      $_SESSION["roleid"] = $_GET["roleid"];
-      $rolename = $_GET["rolename"];
-      $_SESSION["questionid"] = $_GET["questionid"];
-      $question = $_GET["question"];
-      $answer = $_GET["answer"];
+    if (isset($_GET["accountid"]) && !empty($_GET["accountid"]) && isset($_GET["username"]) && !empty($_GET["username"]) &&
+    isset($_GET["email"]) && !empty($_GET["email"]) && isset($_GET["roleid"]) && !empty($_GET["roleid"]) &&
+    isset($_GET["rolename"]) && !empty($_GET["rolename"]) && isset($_GET["questionid"]) && !empty($_GET["questionid"]) &&
+    isset($_GET["question"]) && !empty($_GET["question"]) && isset($_GET["answer"]) && !empty($_GET["answer"])) {
+      $_SESSION["accountid"] = (int)trim(strip_tags(htmlspecialchars(htmlspecialchars($_GET["accountid"]))));
+      $username = trim(strip_tags(htmlspecialchars(html($_GET["username"]))));
+      $email = trim(strip_tags(htmlspecialchars(html($_GET["email"]))));
+      $_SESSION["roleid"] = (int)trim(strip_tags(htmlspecialchars(htmlspecialchars($_GET["roleid"]))));
+      $rolename = trim(strip_tags(htmlspecialchars(html($_GET["rolename"]))));
+      $_SESSION["questionid"] = (int)trim(strip_tags(htmlspecialchars(htmlspecialchars($_GET["questionid"]))));
+      $question = trim(strip_tags(htmlspecialchars(html($_GET["question"]))));
+      $answer = trim(strip_tags(htmlspecialchars(html($_GET["answer"]))));
     } else {
       $accountid = "";
       $username = "";
@@ -114,12 +117,14 @@
   <?php
   if (isset($_POST["submit"])) {
     // check SQL injection
-    if (!empty($_POST["username"]) && !empty($_POST["email"]) && !empty($_POST["roleid"]) && !empty($_POST["questionid"]) && !empty($_POST["answer"])) {
-      $usernameDB = trim(strtolower(strip_tags(htmlspecialchars($_POST["username"]))));
-      $emailDB = strtolower(strip_tags(htmlspecialchars(strtolower($_POST["email"]))));
-      $roleidDB = $_POST["roleid"];
-      $questionidDB = $_POST["questionid"];
-      $answerDB = trim(strip_tags(htmlspecialchars(strtolower($_POST["answer"]))));
+    if (isset($_POST["username"]) && !empty($_POST["username"]) && isset($_POST["email"]) && !empty($_POST["email"]) &&
+    isset($_POST["roleid"]) && !empty($_POST["roleid"]) && isset($_POST["questionid"]) && !empty($_POST["questionid"]) &&
+    isset($_POST["answer"]) && !empty($_POST["answer"])) {
+      $usernameDB = trim(strtolower(strip_tags(htmlspecialchars(htmlentities($_POST["username"])))));
+      $emailDB = strtolower(trim(strip_tags(htmlspecialchars(htmlentities($_POST["email"])))));
+      $roleidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["roleid"]))));
+      $questionidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["questionid"]))));
+      $answerDB = trim(strip_tags(htmlspecialchars(htmlentities($_POST["answer"]))));
       $accountidDB = $_SESSION["accountid"];
 
       unset($_SESSION["accountid"]);

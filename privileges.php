@@ -80,7 +80,9 @@
     // by default, all player is displayed
     if (empty($_POST["searchbutton"])) {
       $count = 1;
-      $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID ORDER BY RoleName, Username";
+      $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin
+                FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID
+                ORDER BY RoleName, Username";
       $db = configDB($_SESSION["role"]);
       if ($stmt = $db->prepare($query)) {
         $stmt->execute();
@@ -101,7 +103,8 @@
                   <th>Last Login</th>
                 </tr>";
             while( $stmt->fetch() ) {
-                  $row = array('id'=>$count++, 'accountid'=>$accountid, 'username'=>$username, 'email'=>$email,'rolename'=>$rolename, 'question'=>$question, 'answer'=>$answer, 'lastlogin'=>$lastlogin);
+                  $row = array('id'=>$count++, 'accountid'=>$accountid, 'username'=>$username, 'email'=>$email,
+                  'rolename'=>$rolename, 'question'=>$question, 'answer'=>$answer, 'lastlogin'=>$lastlogin);
                   echo "<tr>
                     <td>". $row['id'] ."</td>
                     <td>". $row['username'] ."</td>
@@ -121,19 +124,29 @@
           // check what kind of selection is
           switch($_POST["searchbox"]) {
             case "searchByUsername":
-              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID WHERE Username LIKE ? ORDER BY Username";
+              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin
+                        FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID
+                        WHERE Username LIKE ? ORDER BY Username";
             break;
             case "searchByEmail":
-              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID WHERE Email LIKE ? ORDER BY Email";
+              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin
+                        FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID
+                        WHERE Email LIKE ? ORDER BY Email";
             break;
             case "searchByRole":
-              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID WHERE Role.ID = ? ORDER BY RoleName, Username";
+              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin
+                        FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID
+                        WHERE Role.ID = ? ORDER BY RoleName, Username";
             break;
             case "searchByLastLogin":
-              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID WHERE LastLogin >= DATE_SUB(NOW(), INTERVAL 48 HOUR) ORDER BY Username";
+              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin
+                        FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID
+                        WHERE LastLogin >= DATE_SUB(NOW(), INTERVAL 48 HOUR) ORDER BY Username";
             break;
             default:
-              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID ORDER BY RoleName, Username";
+              $query = "SELECT Account.ID, Username, Email, Role.RoleName, Question.Question, Answer, LastLogin
+                        FROM Account JOIN Role on RoleID = Role.ID JOIN Question ON QuestionNum = Question.ID
+                        ORDER BY RoleName, Username";
             break;
           }
           $count = 1;
@@ -141,10 +154,10 @@
           if ($stmt = $db->prepare($query)) {
             // check SQL injection for textbox, if any
             if (isset($_POST["textbox"]) && !empty($_POST["textbox"])) {
-              $searchtextbox = lcfirst(strip_tags(htmlspecialchars($_POST["textbox"]))) . "%"; // First letter uppercase and search anything that starts with the value in textbox
+              $searchtextbox = lcfirst(trim(strip_tags(htmlspecialchars(htmlentities($_POST["textbox"]))))) . "%"; // First letter uppercase and search anything that starts with the value in textbox
               $stmt->bind_param("s", $searchtextbox);
             } else if (isset($_POST["role"]) && !empty($_POST["role"])) {
-              $searchroleid = $_POST["role"];
+              $searchroleid = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["role"]))));
               $stmt->bind_param("i", $searchroleid);
             }
             $stmt->execute();
@@ -165,7 +178,8 @@
                       <th>Last Login</th>
                     </tr>";
                 while( $stmt->fetch() ) {
-                  $row = array('id'=>$count++, 'accountid'=>$accountid, 'username'=>$username, 'email'=>$email, 'rolename'=>$rolename, 'question'=>$question, 'answer'=>$answer, 'lastlogin'=>$lastlogin);
+                  $row = array('id'=>$count++, 'accountid'=>$accountid, 'username'=>$username, 'email'=>$email,
+                  'rolename'=>$rolename, 'question'=>$question, 'answer'=>$answer, 'lastlogin'=>$lastlogin);
                   echo "<tr>
                     <td>". $row['id'] ."</td>
                     <td>". $row['username'] ."</td>

@@ -43,7 +43,7 @@
   if (isset($_POST["submit"])) {
     // check SQL injection
     if (isset($_POST["teamname"]) && !empty($_POST["teamname"])) {
-      $teamname = ucwords(strip_tags(htmlspecialchars($_POST["teamname"])));
+      $teamname = ucwords(trim(strip_tags(htmlspecialchars(htmlentities($_POST["teamname"])))));
 
       $db = configDB($_SESSION["role"]);
       $query = "INSERT INTO Team(TeamName) VALUES (?)";

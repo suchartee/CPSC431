@@ -54,7 +54,8 @@
                 <th>Action</th>
               </tr>";
           while( $stmt->fetch() ) {
-                $row = array('id'=>$count++, 'matchid'=>$matchid, 'dateplayed'=>$dateplayed, 'hometeam'=>$hometeam,'awayteam'=>$awayteam, 'homescore'=>$homescore, 'awayscore'=>$awayscore, 'winteam'=>$winteam, 'lostteam'=>$lostteam);
+                $row = array('id'=>$count++, 'matchid'=>$matchid, 'dateplayed'=>$dateplayed, 'hometeam'=>$hometeam,'awayteam'=>$awayteam,
+                'homescore'=>$homescore, 'awayscore'=>$awayscore, 'winteam'=>$winteam, 'lostteam'=>$lostteam);
                 echo "<tr>
                   <td>". $row['id'] ."</td>
                   <td>". $row['dateplayed'] ."</td>
@@ -73,7 +74,7 @@
 
     <?php
       if (isset($_GET["matchid"]) && !empty($_GET["matchid"])) {
-        $matchid = $_GET["matchid"];
+        $matchid = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["matchid"]))));
         $query = "DELETE FROM Matches WHERE ID = ?";
         if ($stmt = $db->prepare($query)) {
           $stmt->bind_param("i", $matchid);

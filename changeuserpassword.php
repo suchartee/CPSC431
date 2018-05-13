@@ -34,9 +34,8 @@
   <form method="post" action="changeuserpassword.php">
     <div class="box">
       <h1>Change User Password</h1>
-      <input type="password" name="password1" placeholder="New Password" class="textbox" title="Enter a password with at least 6 characters, at least one lowercase, at least one uppercase and at least one special character" required/><br/>
-      <input type="password" name="password2" placeholder="Confirm new Password" class="textbox" title="Enter a password with at least 6 characters, at least one lowercase, at least one uppercase and at least one special character" required/><br/>
-
+      <input type="password" name="password1" placeholder="New Password" class="textbox" required/><br/>
+      <input type="password" name="password2" placeholder="Confirm new Password" class="textbox" required/><br/>
       <input type="submit" class="btn_reg" value="Submit" name="submit"/>
       <a href="modifyuseraccount.php"><input type="button" class="btn_login" value="Cancel" name="cancel"/></a>
     </div>
@@ -44,8 +43,8 @@
 
   <?php
     if(isset($_POST['password1']) && !empty($_POST['password1']) && isset($_POST['password2']) && !empty($_POST['password2'])) {
-        $password1 = strip_tags(htmlspecialchars($_POST['password1']));
-        $password2 = strip_tags(htmlspecialchars($_POST['password2']));
+        $password1 = trim(strip_tags(htmlspecialchars($_POST['password1'])));
+        $password2 = trim(strip_tags(htmlspecialchars($_POST['password2'])));
         // check if 2 passwords are the same
         if ($password1 == $password2) {
             $db = configDB(5);

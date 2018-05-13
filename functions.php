@@ -13,21 +13,27 @@ function checkPermission($roleid, $url) {
       case 2: // operator
         // switch 2 = operator
         // check if the url is in buttons_operator?
-        $query = "SELECT * FROM Buttons_operator WHERE Link = ? UNION SELECT * FROM Buttons_change WHERE Link = ?" ;
+        $query = "SELECT * FROM Buttons_operator WHERE Link = ?
+        UNION SELECT * FROM Buttons_change WHERE Link = ?" ;
         $stmt = $db->prepare($query);
         $stmt->bind_param("ss", $url, $url);
       break;
       case 3: // manager
         // switch 3 = manager
         // check if the url is in buttons_operator? and buttons_manager?
-        $query = "SELECT * FROM Buttons_operator WHERE Link = ? UNION SELECT * FROM Buttons_manager WHERE Link = ? UNION SELECT * FROM Buttons_change WHERE Link = ?";
+        $query = "SELECT * FROM Buttons_operator WHERE Link = ?
+        UNION SELECT * FROM Buttons_manager WHERE Link = ?
+        UNION SELECT * FROM Buttons_change WHERE Link = ?";
         $stmt = $db->prepare($query);
         $stmt->bind_param("sss", $url, $url, $url);
       break;
       case 4: // admin
         // switch 4 = admin
         // check if the url is in buttons_operator? and buttons_manager? and buttons_admin
-        $query = "SELECT * FROM Buttons_operator WHERE Link = ? UNION SELECT * FROM Buttons_manager WHERE Link = ? UNION SELECT * FROM Buttons_admin WHERE Link = ? UNION SELECT * FROM Buttons_change WHERE Link = ?";
+        $query = "SELECT * FROM Buttons_operator WHERE Link = ?
+        UNION SELECT * FROM Buttons_manager WHERE Link = ?
+        UNION SELECT * FROM Buttons_admin WHERE Link = ?
+        UNION SELECT * FROM Buttons_change WHERE Link = ?";
         $stmt = $db->prepare($query);
         $stmt->bind_param("ssss", $url, $url, $url, $url);
       break;

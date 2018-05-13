@@ -19,10 +19,14 @@
     <div class="box">
       <h1>Registration</h1>
 
-      <input type="text" name="username" placeholder="Username" class="textbox" value="<?php if(isset($_POST['email']) && !empty($_POST['username'])) { echo $_POST['username']; } ?>" required/><br/>
-      <input type="password" name="password1" placeholder="Password" class="textbox" title="Enter a password with at least 6 characters, at least one lowercase, at least one uppercase and at least one special character" required/><br/>
-      <input type="password" name="password2" placeholder="Confirm Password" class="textbox" title="Enter a password with at least 6 characters, at least one lowercase, at least one uppercase and at least one special character" required/><br/>
-      <input type="email" name="email" placeholder="Email" class="textbox" value="<?php if(isset($_POST['email']) && !empty($_POST['email'])) { echo $_POST['email']; } ?>" required/><br/>
+      <input type="text" name="username" placeholder="Username" class="textbox"
+      value="<?php if(isset($_POST['email']) && !empty($_POST['username'])) { echo $_POST['username']; } ?>" required/><br/>
+      <input type="password" name="password1" placeholder="Password" class="textbox"
+      title="Enter a password with at least 6 characters, at least one lowercase, at least one uppercase and at least one special character" required/><br/>
+      <input type="password" name="password2" placeholder="Confirm Password" class="textbox"
+      title="Enter a password with at least 6 characters, at least one lowercase, at least one uppercase and at least one special character" required/><br/>
+      <input type="email" name="email" placeholder="Email" class="textbox"
+      value="<?php if(isset($_POST['email']) && !empty($_POST['email'])) { echo $_POST['email']; } ?>" required/><br/>
       <select class="select" name="question" required>
         <option disabled selected value>Security Question</option>
         <?php
@@ -50,19 +54,19 @@
 
   <?php
     // When the register button is clicked
-    if(isset($_POST['register'])){
+    if(isset($_POST['register']) && !empty($_POST["register"])){
       // SQL injection
-      $username = trim(strtolower(strip_tags(htmlspecialchars($_POST['username']))));
-      $password1 = strip_tags(htmlspecialchars($_POST['password1']));
-      $password2 = strip_tags(htmlspecialchars($_POST['password2']));
-      $email = strtolower(strip_tags(htmlspecialchars($_POST['email'])));
-      $role = 1;
+      $username = trim(strtolower(strip_tags(htmlspecialchars(htmlentities($_POST['username'])))));
+      $password1 = trim(strip_tags(htmlspecialchars(htmlentities($_POST['password1']))));
+      $password2 = trim(strip_tags(htmlspecialchars(htmlentities($_POST['password2']))));
+      $email = strtolower(trim(strip_tags(htmlspecialchars(htmlentities($_POST['email'])))));
+      $role = 1; // by default = observer
 
       // Check if question is selected
       if (isset($_POST['question']) && !empty($_POST['question'])) {
-        $question = $_POST['question'];
+        $question = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST['question']))));
       }
-      $answer = strip_tags(htmlspecialchars($_POST['answer']));
+      $answer = trim(strip_tags(htmlspecialchars(htmlentities($_POST['answer']))));
 
       // validate password format
       //^(?=.*[A-Z])(?=.*[a-z])(?=.*\w)(?=.*\d).{6,}$

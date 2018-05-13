@@ -54,7 +54,8 @@
                 <th>Action</th>
               </tr>";
           while( $stmt->fetch() ) {
-                $row = array('id'=>$count++, 'matchid'=>$matchid, 'dateplayed'=>$dateplayed, 'hometeam'=>$hometeam,'awayteam'=>$awayteam, 'homescore'=>$homescore, 'awayscore'=>$awayscore, 'winteam'=>$winteam, 'lostteam'=>$lostteam);
+                $row = array('id'=>$count++, 'matchid'=>$matchid, 'dateplayed'=>$dateplayed, 'hometeam'=>$hometeam,'awayteam'=>$awayteam,
+                'homescore'=>$homescore, 'awayscore'=>$awayscore, 'winteam'=>$winteam, 'lostteam'=>$lostteam);
                 echo "<tr>
                   <td>". $row['id'] ."</td>
                   <td>". $row['dateplayed'] ."</td>
@@ -64,7 +65,9 @@
                   <td>". $row['awayscore'] ."</td>
                   <td>". $row['winteam'] ."</td>
                   <td>". $row['lostteam'] ."</td>
-                  <td><a href=\"changematchinfo.php?matchid=".$row['matchid']."&hometeam=".$row['hometeam']."&awayteam=".$row['awayteam']."&homescore=".$row['homescore']."&awayscore=".$row['awayscore']."&dateplayed=".$row['dateplayed']."&winteam=".$row['winteam']."&lostteam=".$row['lostteam']."\">Change</a>
+                  <td><a href=\"changematchinfo.php?matchid=".$row['matchid']."&hometeam=".$row['hometeam']."&awayteam="
+                  .$row['awayteam']."&homescore=".$row['homescore']."&awayscore=".$row['awayscore']."&dateplayed="
+                  .$row['dateplayed']."&winteam=".$row['winteam']."&lostteam=".$row['lostteam']."\">Change</a>
                 </tr>";
           }
       echo "</table>

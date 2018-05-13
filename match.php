@@ -106,7 +106,8 @@
                   <th>Lost Team</th>
                 </tr>";
             while( $stmt->fetch() ) {
-                  $row = array('id'=>$count++, 'dateplayed'=>$dateplayed, 'hometeam'=>$hometeam,'awayteam'=>$awayteam, 'homescore'=>$homescore, 'awayscore'=>$awayscore, 'winteam'=>$winteam, 'lostteam'=>$lostteam);
+                  $row = array('id'=>$count++, 'dateplayed'=>$dateplayed, 'hometeam'=>$hometeam,'awayteam'=>$awayteam,
+                  'homescore'=>$homescore, 'awayscore'=>$awayscore, 'winteam'=>$winteam, 'lostteam'=>$lostteam);
                   echo "<tr>
                     <td>". $row['id'] ."</td>
                     <td>". $row['dateplayed'] ."</td>
@@ -182,10 +183,10 @@
           if ($stmt = $db->prepare($query)) {
             // check SQL injection for textbox, if any
             if (isset($_POST["textbox"]) && !empty($_POST["textbox"])) {
-              $searchtextbox = lcfirst(strip_tags(htmlspecialchars($_POST["textbox"]))) . "%"; // First letter uppercase and search anything that starts with the value in textbox
+              $searchtextbox = lcfirst(trim(strip_tags(htmlspecialchars(htmlentities($_POST["textbox"]))))) . "%"; // First letter uppercase and search anything that starts with the value in textbox
               $stmt->bind_param("ss", $searchtextbox, $searchtextbox);
             } else if (isset($_POST["playerid"]) && !empty($_POST["playerid"])) {
-              $searchtextbox = $_POST["playerid"];
+              $searchtextbox = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["playerid"]))));
               $stmt->bind_param("ii", $searchtextbox, $searchtextbox);
             } else if (isset($_POST["datepicker"]) && !empty($_POST["datepicker"])) {
               $date = date("Y-m-d", strtotime($_POST["datepicker"]));
@@ -209,7 +210,8 @@
                       <th>Lost Team</th>
                     </tr>";
                 while( $stmt->fetch() ) {
-                      $row = array('id'=>$count++, 'dateplayed'=>$dateplayed, 'hometeam'=>$hometeam,'awayteam'=>$awayteam, 'homescore'=>$homescore, 'awayscore'=>$awayscore, 'winteam'=>$winteam, 'lostteam'=>$lostteam);
+                      $row = array('id'=>$count++, 'dateplayed'=>$dateplayed, 'hometeam'=>$hometeam,'awayteam'=>$awayteam,
+                      'homescore'=>$homescore, 'awayscore'=>$awayscore, 'winteam'=>$winteam, 'lostteam'=>$lostteam);
                       echo "<tr>
                         <td>". $row['id'] ."</td>
                         <td>". $row['dateplayed'] ."</td>

@@ -26,7 +26,8 @@
     include 'logged_navbar.php';
     $count = 1;
     $db = configDB($_SESSION["role"]);
-    $query = "SELECT Team.ID, TeamName, Coach.ID, Coach.FirstName, Coach.LastName, WinCount, LostCount FROM Team LEFT JOIN Coach ON Coach.ID = CoachID ORDER BY TeamName";
+    $query = "SELECT Team.ID, TeamName, Coach.ID, Coach.FirstName, Coach.LastName, WinCount, LostCount
+              FROM Team LEFT JOIN Coach ON Coach.ID = CoachID ORDER BY TeamName";
     if ($stmt = $db->prepare($query)) {
       $stmt->execute();
       $stmt->store_result();
@@ -47,7 +48,8 @@
             </tr>";
 
         while( $stmt->fetch() ) {
-          $row = array('id'=>$count++, 'teamid'=>$teamID, 'teamname'=>$teamname, 'coachid'=>$coachID, 'coachfirstname'=>$coachfirstname, 'coachlastname'=>$coachlastname, 'wincount'=>$wincount,'lostcount'=>$lostcount);
+          $row = array('id'=>$count++, 'teamid'=>$teamID, 'teamname'=>$teamname, 'coachid'=>$coachID,
+          'coachfirstname'=>$coachfirstname, 'coachlastname'=>$coachlastname, 'wincount'=>$wincount,'lostcount'=>$lostcount);
           echo "<tr>
 
             <td>". $row['id'] ."</td>
@@ -56,7 +58,9 @@
             <td>". $row['coachlastname'] ."</td>
             <td>". $row['wincount'] ."</td>
             <td>". $row['lostcount'] ."</td>
-            <td><a href=\"changeteaminfo.php?teamid=".$row['teamid']."&teamname=".$row['teamname']."&coachid=".$row['coachid']."&coachfirstname=".$row['coachfirstname']."&coachlastname=".$row['coachlastname']."&wincount=".$row['wincount']."&lostcount=".$row['lostcount']."\">Change</a>
+            <td><a href=\"changeteaminfo.php?teamid=".$row['teamid']."&teamname=".$row['teamname']."&coachid="
+            .$row['coachid']."&coachfirstname=".$row['coachfirstname']."&coachlastname=".$row['coachlastname']."&wincount="
+            .$row['wincount']."&lostcount=".$row['lostcount']."\">Change</a>
           </tr>";
         }
     echo "</table>
