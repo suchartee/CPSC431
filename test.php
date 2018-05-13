@@ -29,6 +29,11 @@ $db = configDB(5);
 
    <ul class="drop_menu">
      <?php
+     $nextAttempt = date("Y-m-d H:i:s", strtotime("+5 minutes"));
+
+     // reformat for the user's ease of reading
+     $nextAttemptFormat = date("l F d, Y. g:i:s A", strtotime($nextAttempt));
+     echo $nextAttemptFormat;
      /*
      // select all button that this role can see
      $query = "SELECT Button.ID, Button.Name, Button.Link, Permission.MenuType FROM Permission JOIN Button ON Permission.ButtonID = Button.ID AND RoleID = 2 AND Permission != 0 ORDER BY Button.ID";

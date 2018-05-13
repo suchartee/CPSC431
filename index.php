@@ -33,7 +33,7 @@
 
   <?php
   /*--------------------------------------This is the beginning of Suchartee Kitisopakul's part-----------------------------------------------------*/
-  if ((isset($_POST["username"]) && !empty($_POST["username"])) && (isset($_POST["password"]) && (!empty($_POST["password"])))) {
+  if (isset($_POST["username"]) && !empty($_POST["username"]) && isset($_POST["password"]) && !empty($_POST["password"])) {
       // sql injection
       $username = strtolower(trim(strip_tags(htmlspecialchars(htmlentities($_POST["username"])))));
       $password = strip_tags(trim(htmlspecialchars(htmlentities($_POST['password']))));
@@ -151,7 +151,7 @@
                                           $nextAttempt = date("Y-m-d H:i:s", strtotime("+5 minutes"));
 
                                           // reformat for the user's ease of reading
-                                          $nextAttemptFormat = date("D F d, Y at g:i:s A", strtotime($nextAttempt));
+                                          $nextAttemptFormat = date("l F d, Y. g:i:s A", strtotime($nextAttempt));
 
                                           $query = "UPDATE LoginAttempts SET LastAttempt = ?, NextAttempt = ? WHERE Username = ?";
                                           if ($stmt = $db->prepare($query)) {
@@ -211,10 +211,7 @@
                                               mail($email, $subject, $message, $header);
                                               // set timeout for checking
                                               $_SESSION["timeout"] = $nextAttempt;
-                                              echo "<script type=\"text/javascript\">
-                                              alert(\"You have exceed the number of allowed login attempts
-                                              \\nPlease try again later
-                                              \\nYour next login time will be ". $nextAttemptFormat . "\")</script>";
+                                              echo "<script type=\"text/javascript\"> alert(\"You have exceed the number of allowed login attempts\\nPlease try again later\\nYour next login time will be ". $nextAttemptFormat . "\")</script>";
                                           } else {
                                               // prepare statement error
                                               echo '<script type="text/javascript"> alert("Error!")</script>';
@@ -223,10 +220,7 @@
                                       } else {
                                           // for those whose account is not in account table = no email for sending
                                           $_SESSION["timeout"] = $nextAttempt;
-                                          echo "<script type=\"text/javascript\">
-                                          alert(\"You have exceed the number of allowed login attempts
-                                          \\nPlease try again later
-                                          \\nYour next login time will be: ". $nextAttemptFormat ."\")</script>";
+                                          echo "<script type=\"text/javascript\"> alert(\"You have exceed the number of allowed login attempts\\nPlease try again later\\nYour next login time will be: ". $nextAttemptFormat ."\")</script>";
                                       }
                                   }
                               } else {
@@ -237,9 +231,7 @@
                                   if ($stmt = $db->prepare($query)) {
                                       $stmt->bind_param("sis", $username, $attempt, $lastAttempt);
                                       $stmt->execute();
-                                      echo "<script type=\"text/javascript\">
-                                      alert(\"Wrong username or password! Please try again
-                                      \\nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
+                                      echo "<script type=\"text/javascript\">alert(\"Wrong username or password! Please try again\\nCount: ". $attempt ." (Limit 3 Counts) \")</script>";
                                   } else {
                                       // prepare statement error
                                       echo '<script type="text/javascript"> alert("Error!")</script>';
