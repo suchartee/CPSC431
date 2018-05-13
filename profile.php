@@ -39,7 +39,7 @@
       <?php
       $db = configDB($_SESSION["role"]);
       $query = "SELECT RoleName FROM Role WHERE ID = ?";
-      if ($stmt = $db->prepare()) {
+      if ($stmt = $db->prepare($query)) {
         $stmt->bind_param("i", $_SESSION["role"]);
         $stmt->execute();
         $stmt->store_result();
@@ -48,7 +48,7 @@
         while ($stmt->fetch()) {
           echo $rolename;
         }
-      }      
+      }
       ?>
       </h3>
       <h2 style="text-align:left; padding-left: 10%; color:#594F4F;">
