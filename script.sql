@@ -42,3 +42,11 @@ INSERT INTO Matches (HomeTeamID, AwayTeamID, HomeScore, AwayScore, DatePlayed, W
 (2, 4, 20, 42, '2018-4-25', 4, 2),
 (3, 1, 45, 35, '2018-4-20', 3, 1)
 ;
+
+INSERT INTO Statistics (PlayerID, PlayTimeMin, PlayTimeSec, Point, Assist, Rebound) VALUES
+(1, 30, 0, 25, 10, 2),
+(2, 22, 1, 10, 27, 10),
+(3, 30, 23, 22, 33, 4),
+(4, 20, 45, 33, 30, 2),
+(4, 10, 56, 7, 2, 3)
+;
