@@ -40,7 +40,8 @@
     // retrieve info from previous page (user's choice)
     if (isset($_GET["teamid"]) && !empty($_GET["teamid"]) && isset($_GET["teamname"]) && !empty(isset($_GET["teamname"])) &&
     isset($_GET["coachid"]) && !empty($_GET["coachid"]) && isset($_GET["coachfirstname"]) && !empty($_GET["coachfirstname"]) &&
-    isset($_GET["coachlastname"]) && !empty($_GET["coachlastname"])) {
+    isset($_GET["coachlastname"]) && !empty($_GET["coachlastname"]) && isset($_GET["wincount"]) && !empty($_GET["wincount"]) &&
+    isset($_GET["lostcount"]) && !empty($_GET["lostcount"])) {
       $_SESSION["teamid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["teamid"]))));
       $teamname = trim(strip_tags(htmlspecialchars(htmlentities($_GET["teamname"]))));
       $_SESSION["coachid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["coachid"]))));

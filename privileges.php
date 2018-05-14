@@ -88,7 +88,6 @@
         $stmt->execute();
         $stmt->store_result();
         $stmt->bind_result($accountid, $username, $email, $rolename, $question, $answer, $lastlogin);
-
         $stmt->data_seek(0);
         echo "<div class=\"header\" style=\"display:table;\">All Account</div>
               <div class=\"container\">

@@ -28,53 +28,58 @@
 <body>
   <?php
     include 'logged_navbar.php';
-    $matchid = $_GET["matchid"];
-    $hometeam = $_GET["hometeam"];
-    $awayteam = $_GET["awayteam"];
-    $winteam = $_GET["winteam"];
-    $lostteam = $_GET["lostteam"];
-    $db = configDB($_SESSION["role"]);
-    // try to find the id of the hometeam and awayteam and winteam and lostteam
-    $query = "SELECT HomeTeamID, AwayTeamID, WinTeamID, LostTeamID FROM Matches WHERE ID = ?";
-    if ($stmt = $db->prepare($query)) {
-      $stmt->bind_param("i", $matchid);
-      $stmt->execute();
-      $stmt->store_result();
-      $stmt->bind_result($hometeamid, $awayteamid, $winteamid, $lostteamid);
-      $stmt->data_seek(0);
-      while ($stmt->fetch()) {
-        $_SESSION["hometeamid"] = $hometeamid;
-        $_SESSION["awayteamid"] = $awayteamid;
-        $_SESSION["winteamid"] = $winteamid;
-        $_SESSION["lostteamid"] = $lostteamid;
+    if (isset($_GET["matchid"]) && !empty($_GET["matchid"]) && isset($_GET["hometeam"]) && !empty($_GET["hometeam"]) &&
+    isset($_GET["awayteam"]) && !empty($_GET["awayteam"]) && isset($_GET["winteam"]) && !empty($_GET["winteam"]) &&
+    isset($_GET["lostteam"]) && !empty($_GET["lostteam"])) {
+      $matchid = $_GET["matchid"];
+      $hometeam = $_GET["hometeam"];
+      $awayteam = $_GET["awayteam"];
+      $winteam = $_GET["winteam"];
+      $lostteam = $_GET["lostteam"];
+      $db = configDB($_SESSION["role"]);
+      // try to find the id of the hometeam and awayteam and winteam and lostteam
+      $query = "SELECT HomeTeamID, AwayTeamID, WinTeamID, LostTeamID FROM Matches WHERE ID = ?";
+      if ($stmt = $db->prepare($query)) {
+        $stmt->bind_param("i", $matchid);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($hometeamid, $awayteamid, $winteamid, $lostteamid);
+        $stmt->data_seek(0);
+        while ($stmt->fetch()) {
+          $_SESSION["hometeamid"] = $hometeamid;
+          $_SESSION["awayteamid"] = $awayteamid;
+          $_SESSION["winteamid"] = $winteamid;
+          $_SESSION["lostteamid"] = $lostteamid;
+        }
+      } else {
+        echo '<script type="text/javascript"> alert("Error ha!")</script>';
+        echo "<script>window.location = 'modifymatch.php';</script>";
       }
-    } else {
-      echo '<script type="text/javascript"> alert("Error ha!")</script>';
-      echo "<script>window.location = 'modifymatch.php';</script>";
-    }
 
-    // prepare for the <select><option></option></select>
-    $query = "SELECT ID, TeamName FROM Team";
-    if ($stmt = $db->prepare($query)) {
-      $stmt->execute();
-      $stmt->store_result();
-      $stmt->bind_result($teamid, $teamname);
-    }
+      // prepare for the <select><option></option></select>
+      $query = "SELECT ID, TeamName FROM Team";
+      if ($stmt = $db->prepare($query)) {
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($teamid, $teamname);
+      }
 
-    // retrieve info from previous page (user's choice)
-    if (isset($_GET["homescore"]) && isset($_GET["awayscore"]) && isset($_GET["dateplayed"])) {
-      $_SESSION["dateplayed"] = $_GET["dateplayed"];
-      $_SESSION["homescore"] = $_GET["hofmescore"];
-      $_SESSION["awayscore"] = $_GET["awayscore"];
-      $_SESSION["matchid"] = $matchid;
-    } else {
-      $hometeamid = 0;
-      $awayteamid = 0;
-      $winteamid = 0;
-      $lostteamid = 0;
-      $dateplayed = "";
-      $homescore = "";
-      $awayscore = "";
+      // retrieve info from previous page (user's choice)
+      if (isset($_GET["homescore"]) && isset($_GET["awayscore"]) &&
+      isset($_GET["dateplayed"]) && !empty($_GET["dateplayed"])) {
+        $_SESSION["dateplayed"] = $_GET["dateplayed"];
+        $_SESSION["homescore"] = $_GET["homescore"];
+        $_SESSION["awayscore"] = $_GET["awayscore"];
+        $_SESSION["matchid"] = $matchid;
+      } else {
+        $hometeamid = 0;
+        $awayteamid = 0;
+        $winteamid = 0;
+        $lostteamid = 0;
+        $dateplayed = "";
+        $homescore = "";
+        $awayscore = "";
+      }
     }
     ?>
 
@@ -145,9 +150,9 @@
       $hometeamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["hometeamid"]))));
       $awayteamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["awayteamid"]))));
       $dateplayedDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["datepicker"]))));
-      $homescoreDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["homescore"]));))
-      $awayscoreDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["awayscore"]));))
-      $winteamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["winteamid"]));))
+      $homescoreDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["homescore"]))));
+      $awayscoreDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["awayscore"]))));
+      $winteamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["winteamid"]))));
       $lostteamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["lostteamid"]))));
 
       $query = "UPDATE Matches

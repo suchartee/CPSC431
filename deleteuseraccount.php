@@ -26,11 +26,11 @@
     include 'logged_navbar.php';
     $count = 1;
     $db = configDB($_SESSION["role"]);
-    $query = "SELECT ID, Username FROM Account ORDER BY Username";
+    $query = "SELECT Account.ID, Username, RoleName FROM Account JOIN Role ON RoleID = Role.ID ORDER BY RoleName";
     if ($stmt = $db->prepare($query)) {
       $stmt->execute();
       $stmt->store_result();
-      $stmt->bind_result($accountid, $accountname);
+      $stmt->bind_result($accountid, $accountname, $rolename);
     }
     $stmt->data_seek(0);
     echo "<div class=\"header\" style=\"display:table;\">Delete User Account</div>
@@ -39,14 +39,16 @@
             <tr>
               <th>No.</th>
               <th>Username</th>
+              <th>Role</th>
               <th>Action</th>
             </tr>";
             $row = array();
         while( $stmt->fetch() ) {
-            $row = array('id'=>$count++, 'accountid'=>$accountid, 'accountname'=>$accountname);
+            $row = array('id'=>$count++, 'accountid'=>$accountid, 'accountname'=>$accountname, 'role'=>$rolename);
               echo "<tr>
                 <td>". $row['id'] ."</td>
                 <td>". $row['accountname'] ."</td>
+                <td>". $row['role'] ."</td>
                 <td><a href=\"deleteuseraccount.php?accountid=".$row['accountid']."\">Delete</a>
               </tr>";
         }

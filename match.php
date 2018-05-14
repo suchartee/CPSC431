@@ -84,7 +84,8 @@
                 HomeScore, AwayScore, DatePlayed,
                 (SELECT TeamName FROM Team WHERE ID = WinTeamID),
                 (SELECT TeamName FROM Team WHERE ID = LostTeamID)
-                FROM Matches";
+                FROM Matches
+                ORDER BY DatePlayed";
       $db = configDB($_SESSION["role"]);
       if ($stmt = $db->prepare($query)) {
         $stmt->execute();
@@ -136,7 +137,8 @@
              	            (SELECT TeamName FROM Team WHERE Team.ID = Matches.WinTeamID) AS WinTeam,
              	            (SELECT TeamName FROM Team WHERE Team.ID = Matches.LostTeamID) AS LostTeam
                         FROM Matches) AS InnerTable
-                        WHERE HomeTeam LIKE ? || AwayTeam LIKE ?";
+                        WHERE HomeTeam LIKE ? || AwayTeam LIKE ?
+                        ORDER BY DatePlayed";
             break;
             case "searchByDatePlayed":
               $query = "SELECT *
@@ -166,7 +168,8 @@
                             JOIN Matches ON TeamID = HomeTeamID WHERE Player.ID = ?) OR
                             AwayTeam = (SELECT Team.TeamName
                             FROM Team JOIN Player ON TeamID = Team.ID
-                            JOIN Matches ON TeamID = AwayTeamID WHERE Player.ID = ?)";
+                            JOIN Matches ON TeamID = AwayTeamID WHERE Player.ID = ?)
+                        ORDER BY DatePlayed";
             break;
             default:
               $query = "SELECT
@@ -175,7 +178,7 @@
                         HomeScore, AwayScore, DatePlayed,
                         (SELECT TeamName FROM Team WHERE ID = WinTeamID),
                         (SELECT TeamName FROM Team WHERE ID = LostTeamID)
-                        FROM Matches";
+                        FROM Matches ORDER BY DatePlayed";
             break;
           }
           $count = 1;

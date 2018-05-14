@@ -26,7 +26,7 @@
     include 'logged_navbar.php';
     $count = 1;
     $db = configDB($_SESSION["role"]);
-    $query = "SELECT Coach.ID, FirstName, LastName, Team.ID, TeamName FROM Coach JOIN Team ON TeamID = Team.ID ORDER BY TeamName, LastName";
+    $query = "SELECT Coach.ID, FirstName, LastName, Team.ID, TeamName FROM Coach JOIN Team ON TeamID = Team.ID ORDER BY LastName, FirstName";
     if ($stmt = $db->prepare($query)) {
       $stmt->execute();
       $stmt->store_result();

@@ -33,7 +33,8 @@
               HomeScore, AwayScore, DatePlayed,
               (SELECT TeamName FROM Team WHERE ID = WinTeamID) AS WinTeam,
               (SELECT TeamName FROM Team WHERE ID = LostTeamID) AS LostTeam
-              FROM Matches";
+              FROM Matches
+              ORDER BY DatePlayed";
     if ($stmt = $db->prepare($query)) {
       $stmt->execute();
       $stmt->store_result();

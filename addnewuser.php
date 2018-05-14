@@ -90,13 +90,13 @@
     if (isset($_POST["username"]) && !empty($_POST["username"]) && isset($_POST["password1"]) && !empty($_POST["password1"]) &&
       isset($_POST["password2"]) && !empty($_POST["password2"]) && isset($_POST["email"]) && !empty($_POST["email"]) &&
       isset($_POST["question"]) && !empty($_POST["question"]) && isset($_POST["role"]) && !empty($_POST["role"]) &&
-      isset($_POST["answer"]) && !empty($_POST["answer"]) && ) {
+      isset($_POST["answer"]) && !empty($_POST["answer"])) {
         // DONT FORGET TO HASH PASSWORD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // SQL injection
-        $username = strtolower(trim(strip_tags(htmlspecialchars(htmlentities($_POST['username']))))));
+        $username = strtolower(trim(strip_tags(htmlspecialchars(htmlentities($_POST['username'])))));
         $password1 = trim(strip_tags(htmlspecialchars($_POST['password1'])));
         $password2 = trim(strip_tags(htmlspecialchars($_POST['password2'])));
-        $email = strtolower(strip_tags(htmlspecialchars(htmlentities($_POST['email'])))));
+        $email = strtolower(strip_tags(htmlspecialchars(htmlentities($_POST['email']))));
         $question = (int)strip_tags(htmlspecialchars(htmlentities($_POST["question"])));
         $role = (int)strip_tags(htmlspecialchars(htmlentities($_POST["role"])));
         $answer = strip_tags(htmlspecialchars(htmlentities($_POST['answer'])));

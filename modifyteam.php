@@ -27,7 +27,7 @@
     $count = 1;
     $db = configDB($_SESSION["role"]);
     $query = "SELECT Team.ID, TeamName, Coach.ID, Coach.FirstName, Coach.LastName, WinCount, LostCount
-              FROM Team LEFT JOIN Coach ON Coach.ID = CoachID ORDER BY TeamName";
+              FROM Team LEFT JOIN Coach ON Coach.ID = CoachID ORDER BY LastName, FirstName";
     if ($stmt = $db->prepare($query)) {
       $stmt->execute();
       $stmt->store_result();

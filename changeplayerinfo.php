@@ -38,8 +38,9 @@
     }
 
     // retrieve info from previous page (user's choice)
-    if (isset($_GET["firstname"]) !empty($_GET["firstname"]) && isset($_GET["lastname"]) && !empty($_GET["lastname"]) &&
-    isset($_GET["teamid"]) && !empty($_GET["teamid"]) && isset($_GET["teamname"]) && !empty($_GET["teamname"])) {
+    if (isset($_GET["playerid"]) && !empty($_GET["playerid"]) && isset($_GET["firstname"]) !empty($_GET["firstname"]) &&
+    isset($_GET["lastname"]) && !empty($_GET["lastname"]) && isset($_GET["teamid"]) && !empty($_GET["teamid"]) &&
+    isset($_GET["teamname"]) && !empty($_GET["teamname"])) {
       $_SESSION["playerid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["playerid"]))));
       $firstname = trim(strip_tags(htmlspecialchars(htmlentities($_GET["firstname"]))));
       $lastname = trim(strip_tags(htmlspecialchars(htmlentities($_GET["lastname"]))));

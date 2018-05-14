@@ -63,8 +63,7 @@
   if (isset($_POST["submit"])) {
     // check SQL injection
     if (isset($_POST["playerid"]) && !empty($_POST["playerid"]) && isset($_POST["playingtime"]) && !empty($_POST["playingtime"])
-    && isset($_POST["point"]) && !empty($_POST["point"]) && isset($_POST["rebound"]) && !empty($_POST["rebound"])
-    && isset($_POST["assist"]) && !empty($_POST["assist"])) {
+    && isset($_POST["point"]) && isset($_POST["rebound"]) && isset($_POST["assist"])) {
       // set array for playingtime
       $playingtimearr = array('min'=>0, 'sec'=>0);
       $playingtime = trim(strip_tags(htmlspecialchars(htmlentities($_POST["playingtime"]))));

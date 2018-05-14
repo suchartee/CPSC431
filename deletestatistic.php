@@ -28,7 +28,8 @@
     $db = configDB($_SESSION["role"]);
     $query = "SELECT Statistics.ID, FirstName, LastName, PlayTimeMin, PlayTimeSec, Point, Assist, Rebound
               FROM Statistics
-              JOIN Player ON PlayerID = Player.ID";
+              JOIN Player ON PlayerID = Player.ID
+              ORDER BY LastName, FirstName";
     if ($stmt = $db->prepare($query)) {
       $stmt->execute();
       $stmt->store_result();

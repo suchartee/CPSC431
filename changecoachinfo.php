@@ -38,7 +38,9 @@
     }
 
     // retrieve info from previous page (user's choice)
-    if (isset($_GET["coachfirstname"]) && isset($_GET["coachlastname"]) && isset($_GET["teamid"]) && isset($_GET["teamname"])) {
+    if (isset($_GET["coachid"]) && !empty($_GET["coachid"] && isset($_GET["coachfirstname"]) && !empty($_GET["coachfirstname"] &&
+    isset($_GET["coachlastname"]) && !empty($_GET["coachlastname"] && isset($_GET["teamid"]) && !empty($_GET["teamid"] &&
+    isset($_GET["teamname"]) && !empty($_GET["teamname"]) {
       $_SESSION["coachid"] = $_GET["coachid"];
       $firstname = $_GET["coachfirstname"];
       $lastname = $_GET["coachlastname"];
