@@ -17,7 +17,8 @@
 </head>
 
 <body>
-<?php include_once "default_navbar.php" ?>
+<?php include_once "default_navbar.php";
+?>
 
   <form id="loginform" method="post" action="index.php">
     <div class="box">
@@ -108,6 +109,7 @@
                       echo '<script type="text/javascript"> alert("You still have to wait. Be patient!")</script>';
                   } else {
                         unset($_SESSION["timeout"]);
+                        session_destroy();
                         echo '<script type="text/javascript"> alert("Thank you for being patient! Refresh this page and try again!") </script>';
                   }
                   echo "<script>window.location = 'index.php';</script>";
@@ -207,6 +209,8 @@
                                           mail($email, $subject, $message, $header);
                                           // set timeout for checking
                                           $_SESSION["timeout"] = $nextAttempt;
+                                          unset($_SESSION["username"]);
+                                          unset($_SESSION["email"]);
                                           echo "<script type=\"text/javascript\"> alert(\"You have exceed the number of allowed login attempts\\nPlease try again later\\nYour next login time will be ". $nextAttemptFormat . "\")</script>";
                                       } else {
                                           // prepare statement error

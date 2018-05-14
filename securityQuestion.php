@@ -72,7 +72,7 @@
             // send Email
             mail($email, $subject, $message);
 
-            session_destroy(); // destroy the $_SESSION["question"] and $_SESSION["answer"] and $_SESSION["email"] and $_SESSION["database"];;
+            session_destroy(); // destroy the $_SESSION["question"] and $_SESSION["answer"] and $_SESSION["email"] and $_SESSION["database"];
             echo '<script type="text/javascript"> alert("Email is sent! Please check your email") </script>';
             echo "<script>window.location = 'index.php';</script>";
           } else {

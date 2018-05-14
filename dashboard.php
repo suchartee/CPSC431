@@ -19,6 +19,7 @@
 <body>
   <?php
     include 'logged_navbar.php';
+    unset($_SESSION["timeout"]);
   ?>
 
 <div class="header">
