@@ -35,14 +35,14 @@
     isset($_GET["email"]) && !empty($_GET["email"]) && isset($_GET["roleid"]) && !empty($_GET["roleid"]) &&
     isset($_GET["rolename"]) && !empty($_GET["rolename"]) && isset($_GET["questionid"]) && !empty($_GET["questionid"]) &&
     isset($_GET["question"]) && !empty($_GET["question"]) && isset($_GET["answer"]) && !empty($_GET["answer"])) {
-      $_SESSION["accountid"] = (int)trim(strip_tags(htmlspecialchars(htmlspecialchars($_GET["accountid"]))));
-      $username = trim(strip_tags(htmlspecialchars(html($_GET["username"]))));
-      $email = trim(strip_tags(htmlspecialchars(html($_GET["email"]))));
-      $_SESSION["roleid"] = (int)trim(strip_tags(htmlspecialchars(htmlspecialchars($_GET["roleid"]))));
-      $rolename = trim(strip_tags(htmlspecialchars(html($_GET["rolename"]))));
-      $_SESSION["questionid"] = (int)trim(strip_tags(htmlspecialchars(htmlspecialchars($_GET["questionid"]))));
-      $question = trim(strip_tags(htmlspecialchars(html($_GET["question"]))));
-      $answer = trim(strip_tags(htmlspecialchars(html($_GET["answer"]))));
+      $_SESSION["accountid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["accountid"]))));
+      $username = trim(strip_tags(htmlspecialchars(htmlentities($_GET["username"]))));
+      $email = trim(strip_tags(htmlspecialchars(htmlentities($_GET["email"]))));
+      $_SESSION["roleid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["roleid"]))));
+      $rolename = trim(strip_tags(htmlspecialchars(htmlentities($_GET["rolename"]))));
+      $_SESSION["questionid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["questionid"]))));
+      $question = trim(strip_tags(htmlspecialchars(htmlentities($_GET["question"]))));
+      $answer = trim(strip_tags(htmlspecialchars(htmlentities($_GET["answer"]))));
     } else {
       $accountid = "";
       $username = "";
