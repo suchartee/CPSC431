@@ -33,7 +33,7 @@
       $stmt->bind_result($teamID, $teamname);
     }
     $stmt->data_seek(0);
-    echo "<div class=\"header\" style=\"display:table;\">Delete Player</div>
+    echo "<div class=\"header\" style=\"display:table;\">Delete Team</div>
           <div class=\"container\">
           <table>
             <tr>
@@ -61,8 +61,8 @@
         if ($stmt = $db->prepare($query)) {
           $stmt->bind_param("i", $teamID);
           $stmt->execute();
-          echo '<script type="text/javascript"> alert("You have successfully deleted this player!")</script>';
-          echo "<script>window.location = 'deleteplayer.php';</script>";
+          echo '<script type="text/javascript"> alert("You have successfully deleted this team!")</script>';
+          echo "<script>window.location = 'deleteteam.php';</script>";
         } else {
           echo '<script type="text/javascript"> alert("You do not have this privilege!")</script>';
           echo "<script>window.location = 'dashboard.php';</script>";

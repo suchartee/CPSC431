@@ -7,10 +7,13 @@
 </head>
 
 <body>
-  <ul class="drop_menu">
-    <li><a href='index.php'>Home</a></li>
-    <li><a href='about.php'>About</a></li>
-  </ul>
+  <?php
+  if(isset($_SESSION["role"])) {
+    include_once "logged_navbar.php";
+  } else {
+    include_once "default_navbar.php";
+  }
+   ?>
 
   <div id="about-page">
     <h1>- About Us -</h1>

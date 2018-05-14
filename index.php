@@ -87,7 +87,7 @@
                 }
               } else {
                 // wrong password
-                // for sending email
+                // keep info in $_SESSION for sending email later
                 $_SESSION["username"] = $username;
                 $_SESSION["email"] = $email;
               }
@@ -114,7 +114,7 @@
                   }
                   echo "<script>window.location = 'index.php';</script>";
               } else {
-                      // timeout is not set (Not exceed 3 times yet)
+                      // timeout is not set (Not exceed 4 times yet)
                       // check if that username has record in the loginAttempts table
                       $query = "SELECT Attempt, LastAttempt, NextAttempt FROM LoginAttempts WHERE Username = ?";
                       if ($stmt = $db->prepare($query)) {
@@ -180,11 +180,11 @@
                                   if (isset($_SESSION["username"]) && !empty($_SESSION["username"]) &&
                                   isset($_SESSION["email"]) && !empty($_SESSION["email"])) {
                                       // prepare for generating new password
-                                      $password = randPassword();
+                                      $passwordrand = randPassword();
 
                                       // store new password to database;
                                       // Hash Password
-                                      $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
+                                      $hashedpassword = password_hash($passwordrand, PASSWORD_DEFAULT);
 
                                       $query = "UPDATE Account SET Password = ? WHERE Email = ?";
                                       if ($stmt = $db->prepare($query)) {
@@ -198,7 +198,7 @@
                                           Someone recently used wrong passwords to try to login to your account - ". $_SESSION["username"] ."
                                           Please use this password to login instead. Remember to change the password immediately after you logged in.
 
-                                          ".$password."
+                                          ".$passwordrand."
 
                                           Sincerely,
                                           Webmaster
@@ -212,6 +212,7 @@
                                           unset($_SESSION["username"]);
                                           unset($_SESSION["email"]);
                                           echo "<script type=\"text/javascript\"> alert(\"You have exceed the number of allowed login attempts\\nPlease try again later\\nYour next login time will be ". $nextAttemptFormat . "\")</script>";
+                                          echo "<script>window.location = 'index.php';</script>";
                                       } else {
                                           // prepare statement error
                                           echo '<script type="text/javascript"> alert("Error!")</script>';

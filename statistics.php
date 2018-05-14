@@ -143,7 +143,7 @@
             $stmt->store_result();
             $stmt->bind_result($pid, $firstname, $lastname, $timemin, $timesec, $point, $assist, $rebound);
             $stmt->data_seek(0);
-            echo "<div class=\"header\" style=\"display:table;\">All Matches</div>
+            echo "<div class=\"header\" style=\"display:table;\">All Statistics</div>
                   <div class=\"container\">
                   <table>
                     <tr>
