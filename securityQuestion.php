@@ -42,13 +42,14 @@
           $email = $_SESSION["email"];
 
           // store new password to database;
-          // dont forget to hash password!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          // Hash Password
+          $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
 
           // Connect to database
       	  $db = configDB(5);
           $query = "UPDATE Account SET Password = ? WHERE Email = ?";
           if ($stmt = $db->prepare($query)) {
-            $stmt->bind_param("ss", $password, $email);
+            $stmt->bind_param("ss", $hashedpassword, $email);
         	  $stmt->execute();
 
             // prepare for Email

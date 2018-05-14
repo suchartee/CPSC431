@@ -91,7 +91,6 @@
       isset($_POST["password2"]) && !empty($_POST["password2"]) && isset($_POST["email"]) && !empty($_POST["email"]) &&
       isset($_POST["question"]) && !empty($_POST["question"]) && isset($_POST["role"]) && !empty($_POST["role"]) &&
       isset($_POST["answer"]) && !empty($_POST["answer"])) {
-        // DONT FORGET TO HASH PASSWORD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // SQL injection
         $username = strtolower(trim(strip_tags(htmlspecialchars(htmlentities($_POST['username'])))));
         $password1 = trim(strip_tags(htmlspecialchars($_POST['password1'])));
@@ -111,8 +110,10 @@
         } else {
           // Check if password and confirm password are the same
           if ($password1 == $password2) {
-            // DONT FORGET TO HASH PASSWORD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // Hash Password
             $password = $password1;
+            $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
+            
             $db = configDB(5);
             $query = "SELECT * FROM Account WHERE Username = ?";
             if ($stmt = $db->prepare($query)) {
@@ -140,7 +141,7 @@
                     $db = configDB(5);
                     $query = "INSERT INTO Account (Username, Password, Email, RoleID, QuestionNum, Answer) VALUES(?, ?, ?, ?, ?, ?)";
                     if ($stmt = $db->prepare($query)) {
-                      $stmt->bind_param("sssiis", $username, $password, $email, $role, $question, $answer);
+                      $stmt->bind_param("sssiis", $username, $hashedpassword, $email, $role, $question, $answer);
                       $stmt->execute();
                       echo '<script type="text/javascript"> alert("New user account is successfully added into the account table!")</script>';
                       echo "<script>window.location = 'addnewuser.php';</script>";

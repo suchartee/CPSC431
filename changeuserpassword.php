@@ -47,10 +47,14 @@
         $password2 = trim(strip_tags(htmlspecialchars($_POST['password2'])));
         // check if 2 passwords are the same
         if ($password1 == $password2) {
+            // Hash Password
+            $password = $password1;
+            $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
+            
             $db = configDB(5);
             $query = "UPDATE Account SET Password = ? WHERE ID = ?";
             if ($stmt = $db->prepare($query)) {
-              $stmt->bind_param("ss", $password1, $_SESSION["accountid"]);
+              $stmt->bind_param("ss", $hashedpassword, $_SESSION["accountid"]);
               $stmt->execute();
               echo '<script type="text/javascript"> alert("New password is successfully changed!") </script>';
               echo "<script>window.location = 'modifyuseraccount.php';</script>";

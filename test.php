@@ -32,8 +32,24 @@ $db = configDB(5);
      $nextAttempt = date("Y-m-d H:i:s", strtotime("+5 minutes"));
 
      // reformat for the user's ease of reading
-     $nextAttemptFormat = date("l F d, Y. g:i:s A", strtotime($nextAttempt));
-     echo $nextAttemptFormat;
+     //$nextAttemptFormat = date("l F d, Y. g:i:s A", strtotime($nextAttempt));
+     //echo $nextAttemptFormat;
+
+     // Hash a new password for storing in the database.
+     // The function automatically generates a cryptographically safe salt.
+     $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
+
+     if (password_verify($password, $hashToStoreInDb)) {
+      echo " YAY ";
+    }
+
+     // Check if the hash of the entered login password, matches the stored hash.
+     // The salt and the cost factor will be extracted from $existingHashFromDb.
+     //$isPasswordCorrect = password_hash("admin", PASSWORD_DEFAULT);
+     //echo " \\n".$isPasswordCorrect;
+
+
+
      /*
      // select all button that this role can see
      $query = "SELECT Button.ID, Button.Name, Button.Link, Permission.MenuType FROM Permission JOIN Button ON Permission.ButtonID = Button.ID AND RoleID = 2 AND Permission != 0 ORDER BY Button.ID";

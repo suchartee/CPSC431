@@ -53,10 +53,14 @@
             echo 'alert("'.$password_warning.'")';
             echo  '</script>';
           } else {
+            // Hash Password
+            $password = $password1;
+            $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
+
             $db = configDB(5);
             $query = "UPDATE Account SET Password = ? WHERE Username = ?";
             if ($stmt = $db->prepare($query)) {
-              $stmt->bind_param("ss", $password1, $_SESSION["username"]);
+              $stmt->bind_param("ss", $hashedpassword, $_SESSION["username"]);
               $stmt->execute();
               echo '<script type="text/javascript"> alert("Your new password is successfully changed!") </script>';
               echo "<script>window.location = 'profile.php';</script>";

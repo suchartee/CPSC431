@@ -5,7 +5,7 @@ DROP USER IF EXISTS 'observer';
 DROP USER IF EXISTS 'operator';
 DROP USER IF EXISTS 'manager';
 DROP USER IF EXISTS 'admin';
-DROP USER IF EXISTS  'accountauth';
+DROP USER IF EXISTS 'accountauth';
 
 USE db_project;
 
@@ -54,7 +54,8 @@ INSERT INTO Question (Question) VALUES
 ('Where were you when you first heard about 9/11?');
 
 INSERT INTO Account VALUES
-('1', 'admin', 'Admin', 'admin@admin.com', 4, '1', 'Answer', NULL);
+('1', 'admin', '$2y$10$vy3JnZWwdBag0.SipB9GCu/gFTplBiNU0JTLyUIYtZ1X1THK55NVK', 'admin@admin.com', 4, '1', 'Answer', NULL);
+-- Password for admin is admin
 
 CREATE TABLE Team
 (

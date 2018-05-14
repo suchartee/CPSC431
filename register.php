@@ -97,8 +97,10 @@
         } else {
           // Check if password and confirm password are the same
           if ($password1 == $password2) {
-            // DONT FORGET TO HASH PASSWORD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // Hash Password
             $password = $password1;
+            $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
+
             $db = configDB(5);
             $query = "SELECT * FROM Account WHERE Username = ?";
             if ($stmt = $db->prepare($query)) {
@@ -126,7 +128,7 @@
                     $db = configDB(5);
                     $query = "INSERT INTO Account (Username, Password, Email, RoleID, QuestionNum, Answer) VALUES(?, ?, ?, ?, ?, ?)";
                     if ($stmt = $db->prepare($query)) {
-                      $stmt->bind_param("sssiis", $username, $password, $email, $role, $question, $answer);
+                      $stmt->bind_param("sssiis", $username, $hashedpassword, $email, $role, $question, $answer);
                       $stmt->execute();
                       echo '<script type="text/javascript"> alert("You are registered") </script>';
                       echo "<script>window.location = 'index.php';</script>";
