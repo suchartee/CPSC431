@@ -85,16 +85,16 @@
         // check what kind of selection is
         switch($_POST["searchbox"]) {
           case "searchByFirstName":
-            $query = "SELECT FirstName, LastName, TeamName FROM Coach JOIN Team on teamID = Team.ID WHERE FirstName LIKE ? ORDER BY TeamName, LastName";
+            $query = "SELECT FirstName, LastName, TeamName FROM Coach JOIN Team on teamID = Team.ID WHERE FirstName LIKE ? ORDER BY LastName, FirstName";
           break;
           case "searchByLastName":
-            $query = "SELECT FirstName, LastName, TeamName FROM Coach JOIN Team on teamID = Team.ID WHERE LastName LIKE ? ORDER BY TeamName, FirstName";
+            $query = "SELECT FirstName, LastName, TeamName FROM Coach JOIN Team on teamID = Team.ID WHERE LastName LIKE ? ORDER BY LastName, FirstName";
           break;
           case "searchByTeam":
             $query = "SELECT FirstName, LastName, TeamName FROM Coach JOIN Team on teamID = Team.ID WHERE TeamName LIKE ? ORDER BY TeamName, LastName";
           break;
           default:
-            $query = "SELECT FirstName, LastName, TeamName FROM Coach JOIN Team on teamID = Team.ID ORDER BY TeamName, LastName";
+            $query = "SELECT FirstName, LastName, TeamName FROM Coach JOIN Team on teamID = Team.ID ORDER BY LastName, FirstName";
           break;
         }
         $count = 1;
@@ -115,12 +115,16 @@
                 <table>
                   <tr>
                     <th>No.</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>Coach's First Name</th>
+                    <th>Coach's Last Name</th>
                     <th>Team Name</th>
                   </tr>";
               while( $stmt->fetch() ) {
-                $row = array('id'=>$count++, 'firstname'=>$firstname, 'lastname'=>$lastname,'teamname'=>$teamname);
+                $row = array('id'=>0, 'firstname'=>"", 'lastname'=>"", 'teamname'=>"");
+                $row['id'] = $count++;
+                $row['firstname'] = $firstname;
+                $row['lastname'] = $lastname;
+                $row['teamname'] = $teamname;
                 echo "<tr>
                   <td>". $row['id'] ."</td>
                   <td>". $row['firstname'] ."</td>

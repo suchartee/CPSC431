@@ -44,7 +44,7 @@
   <div class="box">
   <form action="addnewmatch.php" method="post">
     <label>Date Played</label><br/>
-    <input type="date" name="datepicker" id="datepicker" required/>
+    <input type="date" name="datepicker" id="datepicker" class="textbox" required/>
     <select class="select" id="hometeamsearch" name="hometeamid" required>
       <option value="" disabled selected hidden>Home Team Name</option>
             <?php

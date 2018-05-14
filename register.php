@@ -101,23 +101,21 @@
             $password = $password1;
             $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
 
-            $db = configDB(5);
             $query = "SELECT * FROM Account WHERE Username = ?";
             if ($stmt = $db->prepare($query)) {
               $stmt->bind_param("s", $username);
               $stmt->execute();
-
+              $stmt->store_result();
               // check if this username is existed
               if($stmt->num_rows > 0){
                 // there is the username already in the database
                 echo '<script type="text/javascript"> alert("This username is already exists") </script>';
               } else {
-                $db = configDB(5);
                 $query = "SELECT * FROM Account WHERE Email = ?";
                 if ($stmt = $db->prepare($query)) {
                   $stmt->bind_param("s", $email);
                   $stmt->execute();
-
+                  $stmt->store_result();
                   // check if this email is existed
                   if($stmt->num_rows > 0){
                     // there is the email already in the database
@@ -125,7 +123,6 @@
                   }
                   else {
                     // add this username into database
-                    $db = configDB(5);
                     $query = "INSERT INTO Account (Username, Password, Email, RoleID, QuestionNum, Answer) VALUES(?, ?, ?, ?, ?, ?)";
                     if ($stmt = $db->prepare($query)) {
                       $stmt->bind_param("sssiis", $username, $hashedpassword, $email, $role, $question, $answer);

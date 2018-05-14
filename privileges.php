@@ -102,8 +102,16 @@
                   <th>Last Login</th>
                 </tr>";
             while( $stmt->fetch() ) {
-                  $row = array('id'=>$count++, 'accountid'=>$accountid, 'username'=>$username, 'email'=>$email,
-                  'rolename'=>$rolename, 'question'=>$question, 'answer'=>$answer, 'lastlogin'=>$lastlogin);
+                $row = array('id'=>0, 'accountid'=>0, 'username'=>"", 'email'=>"", 'roleid'=>0, 'rolename'=>"", 'question'=>"", 'answer'=>"", 'lastlogin'=>"");
+                $row['id'] = $count;
+                $row['accountid'] = $accountid;
+                $row['username'] = $username;
+                $row['email'] = $email;
+                $row['roleid'] = $roleid;
+                $row['rolename'] = $rolename;
+                $row['question'] = $question;
+                $row['answer'] = $answer;
+                $row['lastlogin'] = $lastlogin;
                   echo "<tr>
                     <td>". $row['id'] ."</td>
                     <td>". $row['username'] ."</td>

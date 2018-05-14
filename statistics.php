@@ -111,22 +111,24 @@
               $query = "SELECT PlayerID, FirstName, LastName, PlayTimeMin, PlayTimeSec, Point, Assist, Rebound
                         FROM Statistics
                         JOIN Player ON PlayerID = Player.ID
-                        WHERE PlayerID = ?";
+                        WHERE PlayerID = ? ORDER BY LastName, FirstName";
             break;
             case "searchByPlayerNameAvg":
               $query = "SELECT PlayerID, FirstName, LastName, ROUND(AVG(PlayTimeMin), 0), ROUND(AVG(PlayTimeSec)), ROUND(AVG(Point)),
                         ROUND(AVG(Assist)), ROUND(AVG(Rebound))
-                        FROM Statistics JOIN Player ON PlayerID = Player.ID WHERE PlayerID = ? GROUP BY PlayerID";
+                        FROM Statistics JOIN Player ON PlayerID = Player.ID WHERE PlayerID = ? GROUP BY PlayerID
+                        ORDER BY LastName, FirstName";
             break;
             case "viewAllPlayer":
               $query = "SELECT PlayerID, FirstName, LastName, PlayTimeMin, PlayTimeSec, Point, Assist, Rebound
                         FROM Statistics
-                        RIGHT JOIN Player ON PlayerID = Player.ID";
+                        RIGHT JOIN Player ON PlayerID = Player.ID
+                        ORDER BY LastName, FirstName";
             break;
             default:
               $query = "SELECT PlayerID, FirstName, LastName, PlayTimeMin, PlayTimeSec, Point, Assist, Rebound
                         FROM Statistics
-                        JOIN Player ON PlayerID = Player.ID";
+                        JOIN Player ON PlayerID = Player.ID ORDER BY LastName, FirstName";
             break;
           }
           $count = 1;
@@ -154,8 +156,16 @@
                       <th>Rebound(s)</th>
                     </tr>";
                 while( $stmt->fetch() ) {
-                    $row = array('id'=>$count++, 'pid'=>$pid, 'firstname'=>$firstname,'lastname'=>$lastname,
-                    'timemin'=>$timemin, 'timesec'=>$timesec, 'point'=>$point, 'assist'=>$assist, 'rebound'=>$rebound);
+                  $row = array('id'=>0, 'pid'=>0, 'firstname'=>"",'lastname'=>"", 'timemin'=>0, 'timesec'=>0, 'point'=>0, 'assist'=>0, 'rebound'=>0);
+                  $row['id'] = $count++;
+                  $row['pid'] = $pid;
+                  $row['firstname'] = $firstname;
+                  $row['lastname'] = $lastname;
+                  $row['timemin'] = $timemin;
+                  $row['timesec'] = $timesec;
+                  $row['point'] = $point;
+                  $row['assist'] = $assist;
+                  $row['rebound'] = $rebound;
                     echo "<tr>
                     <td>". $row['id'] ."</td>
                     <td>". $row['firstname'] ."</td>

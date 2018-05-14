@@ -55,21 +55,30 @@
                 <th>Action</th>
               </tr>";
           while( $stmt->fetch() ) {
-                $row = array('id'=>$count++, 'matchid'=>$matchid, 'dateplayed'=>$dateplayed, 'hometeam'=>$hometeam,'awayteam'=>$awayteam,
-                'homescore'=>$homescore, 'awayscore'=>$awayscore, 'winteam'=>$winteam, 'lostteam'=>$lostteam);
-                echo "<tr>
-                  <td>". $row['id'] ."</td>
-                  <td>". $row['dateplayed'] ."</td>
-                  <td>". $row['hometeam'] ."</td>
-                  <td>". $row['awayteam'] ."</td>
-                  <td>". $row['homescore'] ."</td>
-                  <td>". $row['awayscore'] ."</td>
-                  <td>". $row['winteam'] ."</td>
-                  <td>". $row['lostteam'] ."</td>
-                  <td><a href=\"changematchinfo.php?matchid=".$row['matchid']."&hometeam=".$row['hometeam']."&awayteam="
-                  .$row['awayteam']."&homescore=".$row['homescore']."&awayscore=".$row['awayscore']."&dateplayed="
-                  .$row['dateplayed']."&winteam=".$row['winteam']."&lostteam=".$row['lostteam']."\">Change</a>
-                </tr>";
+            $row = array('id'=>0, 'matchid'=>0, 'dateplayed'=>"", 'hometeam'=>"",'awayteam'=>"", 'homescore'=>0, 'awayscore'=>0,
+            'winteam'=>"", 'lostteam'=>"");
+            $row['id'] = $count++;
+            $row['matchid'] = $matchid;
+            $row['dateplayed'] = $dateplayed;
+            $row['hometeam'] = $hometeam;
+            $row['awayteam'] = $awayteam;
+            $row['homescore'] = $homescore;
+            $row['awayscore'] = $awayscore;
+            $row['winteam'] = $winteam;
+            $row['lostteam'] = $lostteam;
+            echo "<tr>
+              <td>". $row['id'] ."</td>
+              <td>". $row['dateplayed'] ."</td>
+              <td>". $row['hometeam'] ."</td>
+              <td>". $row['awayteam'] ."</td>
+              <td>". $row['homescore'] ."</td>
+              <td>". $row['awayscore'] ."</td>
+              <td>". $row['winteam'] ."</td>
+              <td>". $row['lostteam'] ."</td>
+              <td><a href=\"changematchinfo.php?matchid=".$row['matchid']."&hometeam=".$row['hometeam']."&awayteam="
+              .$row['awayteam']."&homescore=".$row['homescore']."&awayscore=".$row['awayscore']."&dateplayed="
+              .$row['dateplayed']."&winteam=".$row['winteam']."&lostteam=".$row['lostteam']."\">Change</a>
+            </tr>";
           }
       echo "</table>
       </div>";

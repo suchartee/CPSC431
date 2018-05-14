@@ -48,8 +48,15 @@
             </tr>";
 
         while( $stmt->fetch() ) {
-          $row = array('id'=>$count++, 'teamid'=>$teamID, 'teamname'=>$teamname, 'coachid'=>$coachID,
-          'coachfirstname'=>$coachfirstname, 'coachlastname'=>$coachlastname, 'wincount'=>$wincount,'lostcount'=>$lostcount);
+          $row = array('id'=>0, 'teamid'=>0, 'teamname'=>"", 'coachid'=>0, 'coachfirstname'=>"", 'coachlastname'=>"", 'wincount'=>0,'lostcount'=>0);
+          $row['id'] = $count++;
+          $row['teamid'] = $teamID;
+          $row['teamname'] = $teamname;
+          $row['coachid'] = $coachID;
+          $row['coachfirstname'] = $coachfirstname;
+          $row['coachlastname'] = $coachlastname;
+          $row['wincount'] = $wincount;
+          $row['lostcount'] = $lostcount;
           echo "<tr>
 
             <td>". $row['id'] ."</td>

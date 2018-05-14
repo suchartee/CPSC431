@@ -63,7 +63,7 @@
         if ($stmt = $db->prepare($query)) {
           $stmt->bind_param("i", $accountid);
           $stmt->execute();
-          echo '<script type="text/javascript"> alert("You have successfully deleted this team!")</script>';
+          echo '<script type="text/javascript"> alert("You have successfully deleted this user!")</script>';
           echo "<script>window.location = 'deleteuseraccount.php';</script>";
         } else {
           echo '<script type="text/javascript"> alert("You do not have this privilege!")</script>';

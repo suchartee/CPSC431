@@ -38,7 +38,7 @@
     }
 
     // retrieve info from previous page (user's choice)
-    if (isset($_GET["playerid"]) && !empty($_GET["playerid"]) && isset($_GET["firstname"]) !empty($_GET["firstname"]) &&
+    if (isset($_GET["playerid"]) && !empty($_GET["playerid"]) && isset($_GET["firstname"]) && !empty($_GET["firstname"]) &&
     isset($_GET["lastname"]) && !empty($_GET["lastname"]) && isset($_GET["teamid"]) && !empty($_GET["teamid"]) &&
     isset($_GET["teamname"]) && !empty($_GET["teamname"])) {
       $_SESSION["playerid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["playerid"]))));
@@ -62,9 +62,9 @@
   <div class="box">
   <form action="changeplayerinfo.php" method="post">
   <label>Player's First Name</label><br/>
-  <input type="text" name="firstname" value="<?php echo $firstname; ?>" class="textbox" required/><br/>
+  <input type="text" name="firstname" value="<?php echo $firstname; ?>" class="textbox" readonly="readonly" required/><br/>
   <label>Player's Last Name</label><br/>
-  <input type="text" name="lastname" value="<?php echo $lastname; ?>" class="textbox" required/><br/>
+  <input type="text" name="lastname" value="<?php echo $lastname; ?>" class="textbox" readonly="readonly" required/><br/>
   <label>Player's Team Name</label><br/>
   <select class="select" name="teamID" required>
     <option value="<?php echo $_SESSION["teamid"]; ?>"><?php echo $teamname; ?></option>

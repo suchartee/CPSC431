@@ -30,17 +30,17 @@
     include 'logged_navbar.php';
     // prepare for the <select><option></option></select>
     $db = configDB($_SESSION["role"]);
-    $query = "SELECT ID, TeamName FROM Team";
+    $query = "SELECT ID, FirstName, LastName FROM Coach";
     if ($stmt = $db->prepare($query)) {
       $stmt->execute();
       $stmt->store_result();
-      $stmt->bind_result($teamidDB, $teamnameDB);
+      $stmt->bind_result($coachidDB, $coachfirstnameDB, $coachlastnameDB);
     }
 
     // retrieve info from previous page (user's choice)
-    if (isset($_GET["coachid"]) && !empty($_GET["coachid"] && isset($_GET["coachfirstname"]) && !empty($_GET["coachfirstname"] &&
-    isset($_GET["coachlastname"]) && !empty($_GET["coachlastname"] && isset($_GET["teamid"]) && !empty($_GET["teamid"] &&
-    isset($_GET["teamname"]) && !empty($_GET["teamname"]) {
+    if (isset($_GET["coachid"]) && !empty($_GET["coachid"]) && isset($_GET["coachfirstname"]) && !empty($_GET["coachfirstname"]) &&
+    isset($_GET["coachlastname"]) && !empty($_GET["coachlastname"]) && isset($_GET["teamid"]) && !empty($_GET["teamid"]) &&
+    isset($_GET["teamname"]) && !empty($_GET["teamname"])) {
       $_SESSION["coachid"] = $_GET["coachid"];
       $firstname = $_GET["coachfirstname"];
       $lastname = $_GET["coachlastname"];
@@ -61,21 +61,32 @@
   <div class="container">
   <div class="box">
   <form action="changecoachinfo.php" method="post">
-  <label>Coach's First Name</label><br/>
-  <input type="text" name="firstname" value="<?php echo $firstname ?>" class="textbox" required/><br/>
-  <label>Coach's Last Name</label><br/>
-  <input type="text" name="lastname" value="<?php echo $lastname ?>" class="textbox" required/><br/>
-  <label>Coach's Team Name</label><br/>
+  <label>Coach's Name</label><br/>
+  <select class="select" name="coachid" required>
+    <option value="<?php echo $_SESSION["coachid"]?>"><?php echo $firstname." ".$lastname ?></option>
+          <?php
+					$stmt->data_seek(0);
+					while ($stmt->fetch()){
+						echo "<option value=\"".$coachidDB."\">".$coachfirstnameDB." ".$coachlastnameDB."</option>";
+					}
+          ?>
+  </select><br/>
   <select class="select" name="teamID" required>
     <option value="<?php echo $_SESSION["teamid"]?>"><?php echo $teamname ?></option>
           <?php
+          $query = "SELECT ID, TeamName FROM Team";
+          if ($stmt = $db->prepare($query)) {
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->bind_result($teamidDB, $teamnameDB);
+          }
 					$stmt->data_seek(0);
 					while ($stmt->fetch()){
 						echo "<option value=\"".$teamidDB."\">".$teamnameDB."</option>";
 					}
           ?>
   </select><br/>
-  <input type="submit" class="btn_reg" value="Modify Player" name="submit"/>
+  <input type="submit" class="btn_reg" value="Modify Coach" name="submit"/>
   </form>
   </div>
   </div>
@@ -84,19 +95,16 @@
   <?php
   if (isset($_POST["submit"])) {
     // check SQL injection
-    if (isset($_POST["firstname"]) && !empty($_POST["firstname"]) && isset($_POST["lastname"]) &&
-    !empty($_POST["lastname"]) && isset($_POST["teamID"]) && !empty($_POST["teamID"])) {
-      $firstnameDB = ucwords(trim(strip_tags(htmlspecialchars(htmlentities($_POST["firstname"])))));
-      $lastnameDB = ucwords(trim(strip_tags(htmlspecialchars(htmlentities($_POST["lastname"])))));
+    if (isset($_POST["coachid"]) && !empty($_POST["coachid"]) && isset($_POST["teamID"]) && !empty($_POST["teamID"])) {
+      $coachidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["coachid"]))));
       $teamidDB = (int)trim(strip_tags(htmlspecialchars(htmlentities($_POST["teamID"]))));
-      $coachid = (int)trim(strip_tags(htmlspecialchars(htmlentities($_SESSION["coachid"]))));
 
-      unset($_SESSION["playerid"]);
+      unset($_SESSION["coachid"]);
       unset($_SESSION["teamid"]);
 
-      $query = "UPDATE Coach SET FirstName = ?, LastName = ?, TeamID = ? WHERE ID = ?";
+      $query = "UPDATE Coach SET TeamID = ? WHERE ID = ?";
       if ($stmt = $db->prepare($query)) {
-        $stmt->bind_param("ssii", $firstnameDB, $lastnameDB, $teamidDB, $coachid);
+        $stmt->bind_param("ii", $teamidDB, $coachidDB);
         $stmt->execute();
         echo '<script type="text/javascript"> alert("You have successfully changed coach\'s information!")</script>';
         echo "<script>window.location = 'modifycoach.php';</script>";

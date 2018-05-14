@@ -107,8 +107,16 @@
                   <th>Lost Team</th>
                 </tr>";
             while( $stmt->fetch() ) {
-                  $row = array('id'=>$count++, 'dateplayed'=>$dateplayed, 'hometeam'=>$hometeam,'awayteam'=>$awayteam,
-                  'homescore'=>$homescore, 'awayscore'=>$awayscore, 'winteam'=>$winteam, 'lostteam'=>$lostteam);
+              $row = array('id'=>0, 'dateplayed'=>"", 'hometeam'=>"",'awayteam'=>"", 'homescore'=>0, 'awayscore'=>0,
+              'winteam'=>"", 'lostteam'=>"");
+              $row['id'] = $count++;
+              $row['dateplayed'] = $dateplayed;
+              $row['hometeam'] = $hometeam;
+              $row['awayteam'] = $awayteam;
+              $row['homescore'] = $homescore;
+              $row['awayscore'] = $awayscore;
+              $row['winteam'] = $winteam;
+              $row['lostteam'] = $lostteam;
                   echo "<tr>
                     <td>". $row['id'] ."</td>
                     <td>". $row['dateplayed'] ."</td>

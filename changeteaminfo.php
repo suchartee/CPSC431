@@ -39,9 +39,9 @@
 
     // retrieve info from previous page (user's choice)
     if (isset($_GET["teamid"]) && !empty($_GET["teamid"]) && isset($_GET["teamname"]) && !empty(isset($_GET["teamname"])) &&
-    isset($_GET["coachid"]) && !empty($_GET["coachid"]) && isset($_GET["coachfirstname"]) && !empty($_GET["coachfirstname"]) &&
-    isset($_GET["coachlastname"]) && !empty($_GET["coachlastname"]) && isset($_GET["wincount"]) && !empty($_GET["wincount"]) &&
-    isset($_GET["lostcount"]) && !empty($_GET["lostcount"])) {
+    isset($_GET["coachid"]) && isset($_GET["coachfirstname"]) &&
+    isset($_GET["coachlastname"]) && isset($_GET["wincount"]) &&
+    isset($_GET["lostcount"])) {
       $_SESSION["teamid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["teamid"]))));
       $teamname = trim(strip_tags(htmlspecialchars(htmlentities($_GET["teamname"]))));
       $_SESSION["coachid"] = (int)trim(strip_tags(htmlspecialchars(htmlentities($_GET["coachid"]))));
@@ -67,7 +67,7 @@
   <div class="box">
   <form action="changeteaminfo.php" method="post">
   <label>Team Name</label><br/>
-  <input type="text" name="teamname" value="<?php echo $teamname; ?>" class="textbox" required/><br/>
+  <input type="text" name="teamname" value="<?php echo $teamname; ?>" class="textbox" readonly="readonly" required/><br/>
   <label>Team's Coach Name</label><br/>
   <select class="select" name="coachID" required>
     <option value="<?php echo $_SESSION["coachid"]; ?>"><?php echo $coachfirstname . " " . $coachlastname; ?></option>
@@ -79,9 +79,9 @@
           ?>
   </select><br/>
   <label>Win Game Count</label><br/>
-  <input type="number" name="wincount" value="<?php echo $wincount; ?>" class="textbox" required/><br/>
+  <input type="number" name="wincount" value="<?php echo $wincount; ?>" min="0" class="textbox" required/><br/>
   <label>Lost Game Count</label><br/>
-  <input type="number" name="lostcount" value="<?php echo $lostcount; ?>" class="textbox" required/><br/>
+  <input type="number" name="lostcount" value="<?php echo $lostcount; ?>" min="0" class="textbox" required/><br/>
   <input type="submit" class="btn_reg" value="Modify Team" name="submit"/>
   </form>
   </div>
@@ -114,6 +114,9 @@
         echo '<script type="text/javascript"> alert("You do not have this privilege!")</script>';
         echo "<script>window.location = 'dashboard.php';</script>";
       }
+    } else {
+        echo '<script type="text/javascript"> alert("Error!")</script>';
+        echo "<script>window.location = 'modifyteam.php';</script>";
     }
   }
   ?>

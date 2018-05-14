@@ -239,6 +239,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON db_project.Team TO 'operator'@'localhost
 GRANT SELECT, INSERT, UPDATE, DELETE ON db_project.Statistics TO 'operator'@'localhost' IDENTIFIED BY 'operatorPassword';
 GRANT SELECT, INSERT, UPDATE, DELETE ON db_project.Coach TO 'operator'@'localhost' IDENTIFIED BY 'operatorPassword';
 GRANT SELECT, INSERT, UPDATE, DELETE ON db_project.Matches TO 'operator'@'localhost' IDENTIFIED BY 'operatorPassword';
+GRANT SELECT ON db_project.Role TO 'operator'@'localhost' IDENTIFIED BY 'operatorPassword';
 GRANT SELECT ON db_project.Buttons_observer TO 'operator'@'localhost' IDENTIFIED BY 'operatorPassword';
 GRANT SELECT ON db_project.Buttons_operator TO 'operator'@'localhost' IDENTIFIED BY 'operatorPassword';
 GRANT SELECT ON db_project.Buttons_change TO 'operator'@'localhost' IDENTIFIED BY 'operatorPassword';
@@ -250,8 +251,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON db_project.Statistics TO 'manager'@'loca
 GRANT SELECT, INSERT, UPDATE, DELETE ON db_project.Coach TO 'manager'@'localhost' IDENTIFIED BY 'managerPassword';
 GRANT SELECT, INSERT, UPDATE, DELETE ON db_project.Matches TO 'manager'@'localhost' IDENTIFIED BY 'managerPassword';
 GRANT SELECT, INSERT, UPDATE ON db_project.Account TO 'manager'@'localhost' IDENTIFIED BY 'managerPassword';
-GRANT SELECT,INSERT,UPDATE ON db_project.LoginAttempts TO 'manager'@'localhost' IDENTIFIED BY 'managerPassword';
-GRANT SELECT,INSERT,UPDATE ON db_project.Role TO 'manager'@'localhost' IDENTIFIED BY 'managerPassword';
+GRANT SELECT, INSERT, UPDATE ON db_project.LoginAttempts TO 'manager'@'localhost' IDENTIFIED BY 'managerPassword';
+GRANT SELECT, INSERT, UPDATE ON db_project.Role TO 'manager'@'localhost' IDENTIFIED BY 'managerPassword';
 GRANT SELECT ON db_project.Buttons_observer TO 'manager'@'localhost' IDENTIFIED BY 'managerPassword';
 GRANT SELECT ON db_project.Buttons_operator TO 'manager'@'localhost' IDENTIFIED BY 'managerPassword';
 GRANT SELECT ON db_project.Buttons_manager TO 'manager'@'localhost' IDENTIFIED BY 'managerPassword';
@@ -261,6 +262,7 @@ GRANT ALL PRIVILEGES ON db_project.* TO 'admin'@'localhost' IDENTIFIED BY 'admin
 
 GRANT SELECT, INSERT, UPDATE ON db_project.Account TO 'accountauth'@'localhost' IDENTIFIED BY 'accountauthPassword';
 GRANT SELECT, INSERT, UPDATE ON db_project.LoginAttempts TO 'accountauth'@'localhost' IDENTIFIED BY 'accountauthPassword';
+GRANT SELECT ON db_project.Role TO 'accountauth'@'localhost' IDENTIFIED BY 'accountauthPassword';
 GRANT SELECT ON db_project.Question TO 'accountauth'@'localhost' IDENTIFIED BY 'accountauthPassword';
 
 INSERT INTO Team (TeamName, WinCount, lostCount) VALUES

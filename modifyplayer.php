@@ -46,10 +46,14 @@
             </tr>";
 
         while( $stmt->fetch() ) {
-          $row = array('id'=>$count++, 'playerid'=>$playerID, 'firstname'=>$firstname, 'lastname'=>$lastname,
-          'teamid'=>$teamid,'teamname'=>$teamname);
+          $row = array('id'=>0, 'playerid'=>0, 'firstname'=>"", 'lastname'=>"", 'teamid'=>0,'teamname'=>"");
+          $row['id'] = $count++;
+          $row['playerid'] = $playerID;
+          $row['firstname']= $firstname;
+          $row['lastname']= $lastname;
+          $row['teamid']= $teamid;
+          $row['teamname']= $teamname;
           echo "<tr>
-
             <td>". $row['id'] ."</td>
             <td>". $row['firstname'] ."</td>
             <td>". $row['lastname'] ."</td>

@@ -120,7 +120,11 @@
                     <th>Team Name</th>
                   </tr>";
               while( $stmt->fetch() ) {
-                $row = array('id'=>$count++, 'firstname'=>$firstname, 'lastname'=>$lastname,'teamname'=>$teamname);
+                $row = array('id'=>0, 'firstname'=>"", 'lastname'=>"", 'teamname'=>"");
+                $row['id'] = $count++;
+                $row['firstname']= $firstname;
+                $row['lastname']= $lastname;
+                $row['teamname']= $teamname;
                 echo "<tr>
                   <td>". $row['id'] ."</td>
                   <td>". $row['firstname'] ."</td>

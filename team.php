@@ -154,14 +154,19 @@
                   <tr>
                     <th>No.</th>
                     <th>Team Name</th>
-                    <th>Coach First Name</th>
-                    <th>Coach Last Name</th>
+                    <th>Coach's First Name</th>
+                    <th>Coach's Last Name</th>
                     <th>Win Count</th>
                     <th>Lost Count</th>
                   </tr>";
               while( $stmt->fetch() ) {
-                $row = array('id'=>$count++, 'teamname'=>$teamname, 'wincount'=>$wincount,'lostcount'=>$lostcount,
-                'coachfirstname'=>$coachfirstname,'coachlastname'=>$coachlastname);
+                $row = array('id'=>0, 'teamname'=>"", 'coachfirstname'=>"", 'coachlastname'=>"", 'wincount'=>0,'lostcount'=>0);
+                $row['id'] = $count++;
+                $row['teamname'] = $teamname;
+                $row['coachfirstname'] = $coachfirstname;
+                $row['coachlastname'] = $coachlastname;
+                $row['wincount'] = $wincount;
+                $row['lostcount'] = $lostcount;
                 echo "<tr>
                   <td>". $row['id'] ."</td>
                   <td>". $row['teamname'] ."</td>

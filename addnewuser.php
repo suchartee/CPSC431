@@ -102,7 +102,7 @@
 
         // Check if question is selected
         if (isset($_POST['question']) && !empty($_POST['question'])) {
-          $question = $_POST['question'];
+          $question = (int)strip_tags(htmlspecialchars(htmlentities($_POST['question'])));
         }
         // validate email format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -113,57 +113,58 @@
             // Hash Password
             $password = $password1;
             $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
-            
-            $db = configDB(5);
+
+            $db = configDB($_SESSION["role"]);
+            // check if this username and is existed
             $query = "SELECT * FROM Account WHERE Username = ?";
             if ($stmt = $db->prepare($query)) {
               $stmt->bind_param("s", $username);
               $stmt->execute();
-
-              // check if this username is existed
-              if($stmt->num_rows > 0){
+              $stmt->store_result();
+              // check if this username and is existed
+              if($stmt->num_rows > 0) {
                 // there is the username already in the database
                 echo '<script type="text/javascript"> alert("This username is already exists") </script>';
               } else {
-                $db = configDB(5);
+                // check if this email and is existed
                 $query = "SELECT * FROM Account WHERE Email = ?";
                 if ($stmt = $db->prepare($query)) {
                   $stmt->bind_param("s", $email);
                   $stmt->execute();
-
-                  // check if this email is existed
-                  if($stmt->num_rows > 0){
-                    // there is the email already in the database
+                  $stmt->store_result();
+                  // check if this email and is existed
+                  if($stmt->num_rows > 0) {
+                    // there is the username already in the database
                     echo '<script type="text/javascript"> alert("This email is already exists") </script>';
-                  }
-                  else {
-                    // add this username into database
-                    $db = configDB(5);
-                    $query = "INSERT INTO Account (Username, Password, Email, RoleID, QuestionNum, Answer) VALUES(?, ?, ?, ?, ?, ?)";
-                    if ($stmt = $db->prepare($query)) {
-                      $stmt->bind_param("sssiis", $username, $hashedpassword, $email, $role, $question, $answer);
-                      $stmt->execute();
-                      echo '<script type="text/javascript"> alert("New user account is successfully added into the account table!")</script>';
-                      echo "<script>window.location = 'addnewuser.php';</script>";
-                    } else {
-                      // prepare is fail
-                      echo '<script type="text/javascript"> alert("insert Error!")</script>';
+                  } else {
+                      // add this username into database
+                      $query = "INSERT INTO Account (Username, Password, Email, RoleID, QuestionNum, Answer) VALUES(?, ?, ?, ?, ?, ?)";
+                      if ($stmt = $db->prepare($query)) {
+                        $stmt->bind_param("sssiis", $username, $hashedpassword, $email, $role, $question, $answer);
+                        $stmt->execute();
+                        $stmt->store_result();
+                        echo '<script type="text/javascript"> alert("New user account is successfully added into the account table!")</script>';
+                        echo "<script>window.location = 'addnewuser.php';</script>";
+                      } else {
+                        // prepare is fail
+                        echo '<script type="text/javascript"> alert("Error!")</script>';
+                      }
                     }
+                  } else {
+                    // prepare is fail
+                    echo '<script type="text/javascript"> alert("Error!")</script>';
                   }
-                } else {
-                  echo '<script type="text/javascript"> alert("email Error!") </script>';
                 }
+              } else {
+                // prepare is fail
+                echo '<script type="text/javascript"> alert("Error!")</script>';
               }
             } else {
-              echo '<script type="text/javascript"> alert("username Error!")</script>';
+              echo '<script type="text/javascript"> alert("Your passwords must be the same!")</script>';
             }
           }
-          else {
-            echo '<script type="text/javascript"> alert("Your passwords must be the same!")</script>';
-          }
         }
-    }
-  }
+      }
   ?>
 
 </body>

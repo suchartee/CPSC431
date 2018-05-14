@@ -50,8 +50,17 @@
                 <th>Action</th>
               </tr>";
           while( $stmt->fetch() ) {
-                $row = array('id'=>$count++, 'statid'=>$statid, 'pid'=>$pid, 'firstname'=>$firstname,'lastname'=>$lastname,
-                'timemin'=>$timemin, 'timesec'=>$timesec, 'point'=>$point, 'assist'=>$assist, 'rebound'=>$rebound);
+                $row = array('id'=>0, 'statid'=>0, 'pid'=>0, 'firstname'=>"",'lastname'=>"", 'timemin'=>0, 'timesec'=>0, 'point'=>0, 'assist'=>0, 'rebound'=>0);
+                $row['id'] = $count++;
+                $row['statid'] = $statid;
+                $row['pid'] = $pid;
+                $row['firstname'] = $firstname;
+                $row['lastname'] = $lastname;
+                $row['timemin'] = $timemin;
+                $row['timesec'] = $timesec;
+                $row['point'] = $point;
+                $row['assist'] = $assist;
+                $row['rebound'] = $rebound;
                 echo "<tr>
                   <td>". $row['id'] ."</td>
                   <td>". $row['firstname'] ."</td>
